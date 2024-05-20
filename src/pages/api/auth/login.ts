@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 profilePicture: user.profilePicture,
                 totalMoney: user.totalMoney,
                 bankAccounts: user?.bankAccounts,
-                cards: user?.userCards,
+                cards: user?.cards,
             }, process.env.JWT_SECRET);
 
 
