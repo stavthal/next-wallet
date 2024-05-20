@@ -1,5 +1,5 @@
 // src/pages/register.tsx
-import { useState } from 'react';
+import {FormEvent, useState} from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import {useRouter} from "next/router";
@@ -15,7 +15,7 @@ export default function Register() {
     const [message, setMessage] = useState<string>('');
     const [name, setName] = useState<string>('');
 
-    const handleRegister = async (e) => {
+    const handleRegister = async (e: FormEvent<HTMLElement>): Promise<void> => {
         e.preventDefault();
 
         const formData = new FormData();
@@ -35,18 +35,18 @@ export default function Register() {
             login(data.token); // Log the user in
             setMessage('Registration successful');
             router.push('/'); // Navigate to the home page
-        } catch (error) {
+        } catch (error: any) {
             if (error?.response?.data?.code === 'P2002') {
                 setMessage("Email already exists");
             } else {
-                setMessage(error.response.data); // Display the error message
+                setMessage(error.response.data.error); // Display the error message
             }
         }
     };
 
     return (
         <Container className="flex flex-col items-center justify-center min-h-screen">
-            <form onSubmit={handleRegister}>
+            <form onSubmit={(e) => handleRegister(e)}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Register
             </Typography>

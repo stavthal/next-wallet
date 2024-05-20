@@ -12,6 +12,14 @@ interface AuthContextType {
 interface User {
     id: number;
     email: string;
+    name: string;
+    profilePicture?: string;
+}
+
+interface DecodedUser {
+    userId: number;
+    email: string;
+    name: string;
     profilePicture?: string;
 }
 
@@ -21,17 +29,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            const decoded = jwtDecode<{ userId: number; email: string, profilePicture: string, }>(token);
-            setUser({ id: decoded.userId, email: decoded.email, profilePicture: decoded?.profilePicture});
+        try {
+            const token = localStorage.getItem('token')
+
+            if (token) {
+                const decoded = jwtDecode<DecodedUser>(token);
+                setUser({ id: decoded.userId, email: decoded.email, name: decoded.name, profilePicture: decoded?.profilePicture});
+            }
+        } catch(err) {
+            console.error(err);
+            logout();
         }
+
     }, []);
 
     const login = (token: string) => {
         localStorage.setItem('token', token);
-        const decoded = jwtDecode<{ userId: number; email: string, profilePicture: string,}>(token);
-        setUser({ id: decoded.userId, email: decoded.email, profilePicture: decoded?.profilePicture });
+        const decoded = jwtDecode<DecodedUser>(token);
+        setUser({ id: decoded.userId, email: decoded.email, name: decoded.name, profilePicture: decoded?.profilePicture });
     };
 
     const logout = () => {

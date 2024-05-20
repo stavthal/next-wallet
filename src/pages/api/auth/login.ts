@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ userId: user.id, email: user.email, profilePicture: user.profilePicture }, process.env.JWT_SECRET);
+        const token = jwt.sign({ userId: user.id, name: user.name ,email: user.email, profilePicture: user.profilePicture }, process.env.JWT_SECRET);
 
 
         res.status(200).json({ token });
