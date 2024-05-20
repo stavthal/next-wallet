@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
+import {useRouter} from 'next/router';
 import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextType {
@@ -27,6 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         try {
@@ -40,7 +42,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.error(err);
             logout();
         }
-
     }, []);
 
     const login = (token: string) => {
@@ -52,6 +53,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = () => {
         localStorage.removeItem('token');
         setUser(null);
+
+        router.push('/'); // Navigate to the home page
     };
 
     return (

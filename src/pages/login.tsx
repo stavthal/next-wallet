@@ -1,9 +1,12 @@
-// src/pages/login.tsx
 import { useState } from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import {useRouter} from "next/router";
+import Image from "next/image";
+import {theme} from '../util/theme';
+
+import walletLogo from '../../public/next-wallet-logo.webp';
 
 export default function Login() {
     const router = useRouter();
@@ -26,7 +29,14 @@ export default function Login() {
     };
 
     return (
-        <Container className="flex flex-col items-center justify-center min-h-screen">
+        <Container className="flex flex-col items-center justify-center min-h-screen w-1/2">
+            <Image
+                src={walletLogo}
+                alt={"wallet-logo"}
+                className="mb-4 rounded-full"
+                width={100}
+                height={100}
+            />
             <Typography variant="h4" component="h1" gutterBottom>
                 Login
             </Typography>
@@ -47,8 +57,16 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <Button variant="contained" color="primary" fullWidth onClick={handleLogin} className="mt-4">
+            <Button variant="contained" sx={{backgroundColor: '#0f1b41', '&:hover': {backgroundColor: theme.palette.primary.light }}} fullWidth onClick={handleLogin} className="mt-4">
                 Login
+            </Button>
+            <Button
+                onClick={() => router.push('/')}
+                fullWidth
+                className="mt-2"
+                variant="outlined"
+            >
+                Back to home
             </Button>
             {message && (
                 <Typography variant="body1" color="error" align="center" className="mt-2">
