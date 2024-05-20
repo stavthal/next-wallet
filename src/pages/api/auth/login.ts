@@ -16,6 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const user = await prisma.user.findUnique({
             where: { email },
+            include: {
+                bankAccounts: true,
+                cards: true,
+            }
         });
 
         if (!user) {
@@ -28,7 +32,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ userId: user.id, name: user.name ,email: user.email, profilePicture: user.profilePicture }, process.env.JWT_SECRET);
+        const token = jwt.sign(
+            {
+                userId: user.id,
+                name: user.name ,
+                email: user.email,
+                profilePicture: user.profilePicture,
+                totalMoney: user.totalMoney,
+                bankAccounts: user?.bankAccounts,
+                cards: user?.userCards,
+            }, process.env.JWT_SECRET);
 
 
         res.status(200).json({ token });

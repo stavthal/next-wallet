@@ -8,9 +8,34 @@ generator client {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
+  id             Int       @id @default(autoincrement())
+  email          String    @unique
   password       String
   name           String
   profilePicture String?
+  totalMoney     Float     @default(0.0)
+  cards          Card[]
+  bankAccounts   BankAccount[]
 }
+
+model Card {
+  id         Int    @id @default(autoincrement())
+  userId     Int
+  user       User   @relation(fields: [userId], references: [id])
+  brand      String
+  cardType   String
+  cardNumber String
+  expiryDate DateTime
+  cvv        Int
+}
+
+model BankAccount {
+  id             Int    @id @default(autoincrement())
+  userId         Int
+  user           User   @relation(fields: [userId], references: [id])
+  beneficiaryName String
+  accountNumber  String
+  bankName       String
+}
+
+

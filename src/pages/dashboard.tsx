@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import RequireAuth from "@/components/RequireAuth";
 import { Container, Typography, Avatar, Button } from "@mui/material";
 
+import React from 'react';
+
 function Dashboard() {
     const { user } = useAuth();
 
@@ -22,7 +24,7 @@ function Dashboard() {
 
                 <Container className="p-8 m-0 mb-10 border-2 rounded-2xl shadow-xl">
                     <Typography variant="h1" component="h2">
-                        $ {user?.accountBalance}
+                        $ {user?.totalMoney.toFixed(2)}
                     </Typography>
                 </Container>
                 <Button variant="contained" size={"large"} className="rounded-full" color="primary">

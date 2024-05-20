@@ -10,11 +10,33 @@ interface AuthContextType {
     logout: () => void;
 }
 
+interface BankAccount {
+    userId: string;
+    user: User;
+    accountNumber: string;
+    beneficiaryNumber: string;
+    bankName: string;
+}
+
+interface Card {
+    userId: string;
+    user: User;
+    brand: string;
+    cardType: string;
+    cardholderName: string;
+    cardNumber: string;
+    expiryDate: string;
+    cvv: number;
+}
+
 interface User {
     id: number;
     email: string;
     name: string;
     profilePicture?: string;
+    totalMoney: number;
+    bankAccounts: BankAccount[];
+    cards: Card[];
 }
 
 interface DecodedUser {
@@ -22,6 +44,9 @@ interface DecodedUser {
     email: string;
     name: string;
     profilePicture?: string;
+    totalMoney: number;
+    bankAccounts: BankAccount[];
+    cards: Card[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,7 +61,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             if (token) {
                 const decoded = jwtDecode<DecodedUser>(token);
-                setUser({ id: decoded.userId, email: decoded.email, name: decoded.name, profilePicture: decoded?.profilePicture});
+                setUser(
+                    {
+                        id: decoded.userId,
+                        email: decoded.email,
+                        name: decoded.name,
+                        profilePicture: decoded?.profilePicture,
+                        totalMoney: decoded?.totalMoney,
+                        bankAccounts: decoded.bankAccounts,
+                        cards: decoded.cards,
+                    });
             }
         } catch(err) {
             console.error(err);
@@ -47,7 +81,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (token: string) => {
         localStorage.setItem('token', token);
         const decoded = jwtDecode<DecodedUser>(token);
-        setUser({ id: decoded.userId, email: decoded.email, name: decoded.name, profilePicture: decoded?.profilePicture });
+        setUser(
+            {
+                id: decoded.userId,
+                email: decoded.email,
+                name: decoded.name,
+                profilePicture: decoded?.profilePicture,
+                totalMoney: decoded?.totalMoney,
+                bankAccounts: decoded.bankAccounts,
+                cards: decoded.cards,
+            });
     };
 
     const logout = () => {
