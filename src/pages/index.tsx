@@ -1,7 +1,8 @@
 // src/pages/index.tsx
-import { Container, Typography, Button } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
+import { Container, Typography, Button } from '@mui/material';
 import Link from 'next/link';
+import {useEffect} from "react";
 
 export default function Home() {
     const { user, logout } = useAuth();
@@ -13,6 +14,9 @@ export default function Home() {
                     <Typography variant="h4" component="h1" gutterBottom>
                         Welcome, {user.email}!
                     </Typography>
+
+                            <img src={user.profilePicture} alt={user.profilePicture} />
+                            <h1>1{user.profilePicture}</h1>
                     <Button variant="contained" color="primary" fullWidth onClick={logout}>
                         Logout
                     </Button>

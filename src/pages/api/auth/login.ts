@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 import { verifyPassword, generateToken } from "../../../util/auth";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        const token = generateToken(user);
+        const token = jwt.sign({ userId: user.id, email: user.email, profilePicture: user.profilePicture }, process.env.JWT_SECRET);
+
 
         res.status(200).json({ token });
     } catch (error) {

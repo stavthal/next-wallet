@@ -12,6 +12,7 @@ interface AuthContextType {
 interface User {
     id: number;
     email: string;
+    profilePicture?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,15 +23,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            const decoded = jwtDecode<{ userId: number; email: string }>(token);
-            setUser({ id: decoded.userId, email: decoded.email });
+            const decoded = jwtDecode<{ userId: number; email: string, profilePicture: string, }>(token);
+            setUser({ id: decoded.userId, email: decoded.email, profilePicture: decoded?.profilePicture});
         }
     }, []);
 
     const login = (token: string) => {
         localStorage.setItem('token', token);
-        const decoded = jwtDecode<{ userId: number; email: string }>(token);
-        setUser({ id: decoded.userId, email: decoded.email });
+        const decoded = jwtDecode<{ userId: number; email: string, profilePicture: string,}>(token);
+        setUser({ id: decoded.userId, email: decoded.email, profilePicture: decoded?.profilePicture });
     };
 
     const logout = () => {
