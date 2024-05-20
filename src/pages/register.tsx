@@ -15,6 +15,7 @@ export default function Register() {
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [selectedFileName, setSelectedFileName] = useState<string>('');
     const [message, setMessage] = useState<string>('');
@@ -25,6 +26,11 @@ export default function Register() {
 
     const handleRegister = async (e: FormEvent<HTMLElement>): Promise<void> => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setMessage('Passwords do not match');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('email', email);
@@ -42,7 +48,7 @@ export default function Register() {
             });
             login(data.token); // Log the user in
             setMessage('Registration successful');
-            router.push('/'); // Navigate to the home page
+            await router.push('/'); // Navigate to the home page
         } catch (error: any) {
             if (error?.response?.data?.code === 'P2002') {
                 setMessage("Email already exists");
@@ -132,6 +138,16 @@ export default function Register() {
                     margin="normal"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required={true}
+                />
+                <TextField
+                    label="Confirm password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     required={true}
                 />
                 <input

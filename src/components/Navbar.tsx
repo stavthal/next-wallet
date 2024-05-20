@@ -44,6 +44,7 @@ export default function Navbar() {
                                 alt="profile"
                                 width={50}
                                 height={50}
+                                style={{width: 50, height: 50}}
                                 className="rounded-full"
                             />
                         </Button>
