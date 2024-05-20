@@ -3,16 +3,20 @@ import { useState } from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import {useRouter} from "next/router";
+import {useAuth} from "@/context/AuthContext";
 
 export default function Register() {
+    const router = useRouter();
+    const {login} = useAuth();
+
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [profilePicture, setProfilePicture] = useState<File | null>(null);
     const [message, setMessage] = useState<string>('');
     const [name, setName] = useState<string>('');
 
-    const handleRegister = async () => {
-        const router = useRouter();
+    const handleRegister = async (e) => {
+        e.preventDefault();
 
         const formData = new FormData();
         formData.append('email', email);
@@ -23,15 +27,20 @@ export default function Register() {
         }
 
         try {
-            await axios.post('/api/auth/register', formData, {
+            const { data } = await axios.post('/api/auth/register', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            login(data.token); // Log the user in
             setMessage('Registration successful');
-            router.push('/');
+            router.push('/'); // Navigate to the home page
         } catch (error) {
-            setMessage('Registration failed');
+            if (error?.response?.data?.code === 'P2002') {
+                setMessage("Email already exists");
+            } else {
+                setMessage(error.response.data); // Display the error message
+            }
         }
     };
 
