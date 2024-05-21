@@ -3,9 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import profileImage from '../../public/dummy-profile-pic.png';
+import {theme, colors } from "@/util/theme";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -33,7 +34,7 @@ export default function Navbar() {
                         />
                     </Link>
                 </IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" component="div" className="max-md:invisible" sx={{ flexGrow: 1 }}>
                     Next Wallet
                 </Typography>
                 {user ? (
@@ -61,10 +62,22 @@ export default function Navbar() {
                 ) : (
                     <>
                         <Link href="/login" passHref>
-                            <Button color="inherit">Login</Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className="mr-3"
+                                sx={{backgroundColor: '#fff', color: colors.primary }}
+                            >
+                                Login
+                            </Button>
                         </Link>
                         <Link href="/register" passHref>
-                            <Button color="inherit">Register</Button>
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                            >
+                                Register
+                            </Button>
                         </Link>
                     </>
                 )}

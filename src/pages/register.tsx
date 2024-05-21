@@ -86,7 +86,7 @@ export default function Register() {
     }
 
     return (
-        <Container className="flex flex-col items-center justify-center min-h-screen w-1/2">
+        <Container className="flex flex-col items-center justify-center min-h-screen w-1/2 max-md:w-10/12">
             <form className="flex flex-col" onSubmit={(e) => handleRegister(e)}>
                 <div className="flex flex-col justify-items-center items-center">
                     <Image

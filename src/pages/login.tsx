@@ -29,7 +29,7 @@ export default function Login() {
     };
 
     return (
-        <Container className="flex flex-col items-center justify-center min-h-screen w-1/2">
+        <Container className="flex flex-col items-center justify-center min-h-screen w-1/2 max-md:w-10/12">
             <Image
                 src={walletLogo}
                 alt={"wallet-logo"}
