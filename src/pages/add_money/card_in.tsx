@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import RequireAuth  from '../../components/RequireAuth';
-import {Button, Container, Typography, IconButton} from "@mui/material";
+import {Button, Container, Typography, IconButton, Link} from "@mui/material";
 import {theme} from "@/util/theme";
 import Navbar from "@/components/Navbar";
 import {useAuth} from "@/context/AuthContext";
@@ -8,6 +8,7 @@ import CardComponent from "@/components/CardComponent";
 import {useRouter} from "next/router";
 import axios from 'axios';
 import AddCardIcon from '@mui/icons-material/AddCard';
+import BackButton from "@/components/BackButton";
 
 
 const AddMoney = () => {
@@ -35,6 +36,7 @@ const AddMoney = () => {
     return (
         <>
             <Navbar />
+            <BackButton />
             <Container>
                 <Typography
                     component="h1"
@@ -46,7 +48,7 @@ const AddMoney = () => {
                 {loading ? <Typography>Loading...</Typography>
                     :
                     cards.length === 0 ?
-                        <Typography className="mt-2">You have no cards in your account.</Typography>
+                        <Typography className="my-2">You have no cards in your account.</Typography>
                         :
                         cards.map((card, index) => (
                             <CardComponent
