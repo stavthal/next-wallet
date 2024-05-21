@@ -27,9 +27,9 @@ function AddCard() {
             const cardType = types[Math.floor(Math.random() * types.length)];
 
             // Merge the randomly assigned brand and card type with the rest of the form values
-            const cardData = { ...values, brand, cardType };
+            const cardData = { ...values, brand, cardType, userId: user.id };
 
-            await axios.post('/api/cards', cardData);
+            await axios.post('/api/add_card', cardData);
             alert('Card added successfully');
             router.back();
         } catch (error) {
@@ -39,6 +39,7 @@ function AddCard() {
 
     return (
         <Container className="flex flex-col gap-4">
+            {/* TODO: Add an icon to make it more nice*/}
             <Typography className="mt-4" variant="h4" component="h1" gutterBottom>
                 Add Card
             </Typography>

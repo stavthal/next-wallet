@@ -27,6 +27,7 @@ export const theme = createTheme({
     },
     secondary: {
       main: colors.secondary,
+      light: colors.white,
     },
   },
   typography: {

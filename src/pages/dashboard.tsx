@@ -26,7 +26,7 @@ function Dashboard() {
 
                 <Container className="p-8 m-0 mb-10 border-2 rounded-2xl shadow-xl">
                     <Typography variant="h1" component="h2">
-                        $ {user?.totalMoney?.toFixed(2)}
+                        {user?.totalMoney?.toFixed(2)} €
                     </Typography>
                 </Container>
                 <Container className="ml-0 mt-4 pl-0 pt-4 border-t-2 flex flex-row">

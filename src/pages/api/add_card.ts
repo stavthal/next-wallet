@@ -8,10 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end();
     }
 
-    const { brand, cardType, cardNumber, expiryDate, cvv } = req.body;
-
-    // TODO: Replace with the actual user ID
-    const userId = 1;
+    const { userId, brand, cardType, cardNumber, expiryDate, cvv } = req.body;
 
     try {
         const card = await prisma.card.create({
@@ -19,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 brand,
                 cardType,
                 cardNumber,
-                expiryDate: new Date(expiryDate),
+                expiryDate,
                 cvv: Number(cvv),
                 userId,
             },
