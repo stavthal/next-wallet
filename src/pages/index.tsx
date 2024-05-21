@@ -1,4 +1,4 @@
-// src/pages/index.tsx
+// src/pages/card_in.tsx
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Container, Typography, Button, Box } from '@mui/material';
@@ -63,8 +63,8 @@ export default function Home() {
             <Typography variant="h4" component="h2" align="center" className="text-white" gutterBottom>
                 Features
             </Typography>
-            <div className="grid mb-10 sm:grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-6 border bg-white bg-opacity-80 rounded-xl shadow-md text-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+            <div className="grid pb-5 sm:grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-6 border bg-white bg-opacity-90 rounded-xl shadow-md text-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <AccountBalanceWalletIcon fontSize="large" color="primary" />
                     <Typography variant="h6" component="h3" align="center" gutterBottom>
                         Digital Wallet
@@ -73,7 +73,7 @@ export default function Home() {
                         Securely manage and store your digital assets in one place.
                     </Typography>
                 </div>
-                <div className="p-6 border bg-white bg-opacity-80 rounded-xl shadow-md text-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                <div className="p-6 border bg-white bg-opacity-90 rounded-xl shadow-md text-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <PaymentIcon fontSize="large" color="primary" />
                     <Typography variant="h6" component="h3" align="center" gutterBottom>
                         Easy Payments
@@ -82,7 +82,7 @@ export default function Home() {
                         Make seamless and quick payments with just a few clicks.
                     </Typography>
                 </div>
-                <div className="p-6 border bg-white bg-opacity-80 rounded-xl shadow-md text-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                <div className="p-6 border bg-white bg-opacity-90 rounded-xl shadow-md text-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <SecurityIcon fontSize="large" color="primary" />
                     <Typography variant="h6" component="h3" align="center" gutterBottom>
                         Advanced Security

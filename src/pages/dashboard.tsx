@@ -30,10 +30,10 @@ function Dashboard() {
                     </Typography>
                 </Container>
                 <Container className="ml-0 mt-4 pl-0 pt-4 border-t-2 flex flex-row">
-                    <Button onClick={() => router.push('/add_money')} variant="contained" size={"large"} className="rounded-full" color="primary">
-                        + Add Money
+                    <Button onClick={() => router.push('/add_money/card_in')} variant="contained" className="rounded-full" color="primary">
+                        Add Money
                     </Button>
-                    <Button variant="outlined" size={"large"} className="rounded-full ml-4" color="primary">
+                    <Button variant="outlined"className="rounded-full ml-4" color="primary">
                         Withdraw Money
                     </Button>
                 </Container>

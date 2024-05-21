@@ -1,11 +1,13 @@
-import RequireAuth  from '../components/RequireAuth';
+import RequireAuth  from '../../components/RequireAuth';
 import {Button, Container, Typography} from "@mui/material";
 import Navbar from "@/components/Navbar";
 import {useAuth} from "@/context/AuthContext";
 import CardComponent from "@/components/CardComponent";
+import {useRouter} from "next/router";
 
 const AddMoney = () => {
     const { user } = useAuth();
+    const router = useRouter();
 
     return (
         <>
@@ -16,11 +18,11 @@ const AddMoney = () => {
                     variant="h2"
                     className="mt-4 border-b-2"
                 >
-                    Add Money
+                    Top Up
                 </Typography>
 
                 {/* Cards Container */}
-                {user?.cards?.length === 0 ?
+                {(user?.cards?.length === 0 || !user?.cards) ?
                     <Typography className="mt-2">You have no cards in your account.</Typography>
                     :
                     user?.cards?.map(
@@ -34,7 +36,7 @@ const AddMoney = () => {
                             key={card.id}
                         />)
                 )}
-                <Button variant="contained" color="primary" className="mt-4">
+                <Button onClick={() => router.push('/add_money/add_card')} variant="contained" color="primary" className="mt-4">
                     Add New Card
                 </Button>
             </Container>
