@@ -57,7 +57,7 @@ const AddMoney = () => {
                             />)
                         )
                 }
-                <Container className="flex flex-row items-center ml-0 pl-0">
+                <Container className="flex flex-row items-center ml-0 pl-0 mt-10">
                     <IconButton
                         className="mr-2 text-white"
                         onClick={() => router.push('/add_money/add_card')}

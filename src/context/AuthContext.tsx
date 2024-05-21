@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import axios from 'axios';
 import {useRouter} from 'next/router';
 import { jwtDecode } from 'jwt-decode';
+import {Transaction} from "@prisma/client";
 
 interface AuthContextType {
     user: User | null;
@@ -37,6 +38,7 @@ interface User {
     totalMoney: number;
     bankAccounts: BankAccount[];
     cards: Card[];
+    transactions: Transaction[];
 }
 
 interface DecodedUser {
@@ -47,6 +49,7 @@ interface DecodedUser {
     totalMoney: number;
     bankAccounts: BankAccount[];
     cards: Card[];
+    transactions: Transaction[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -70,6 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                         totalMoney: decoded?.totalMoney,
                         bankAccounts: decoded.bankAccounts,
                         cards: decoded.cards,
+                        transactions: decoded.transactions,
                     });
             }
         } catch(err) {
@@ -90,6 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 totalMoney: decoded?.totalMoney,
                 bankAccounts: decoded.bankAccounts,
                 cards: decoded.cards,
+                transactions: decoded.transactions,
             });
     };
 

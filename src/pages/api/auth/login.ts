@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             include: {
                 bankAccounts: true,
                 cards: true,
+                transactions: true,
             }
         });
 
@@ -41,6 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 totalMoney: user.totalMoney,
                 bankAccounts: user?.bankAccounts,
                 cards: user?.cards,
+                transactions: user?.transactions,
             }, process.env.JWT_SECRET);
 
 

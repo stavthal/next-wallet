@@ -16,6 +16,7 @@ model User {
   totalMoney     Float     @default(0.0)
   cards          Card[]
   bankAccounts   BankAccount[]
+  transactions   Transaction[]
 }
 
 model Card {
@@ -36,6 +37,17 @@ model BankAccount {
   beneficiaryName String
   accountNumber  String
   bankName       String
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  type        String
+  amount      Float
+  userId      Int
+  date        DateTime @default(now())
+  description String?
+  status      String
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 
