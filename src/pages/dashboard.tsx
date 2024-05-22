@@ -67,7 +67,7 @@ function Dashboard() {
                     <Button onClick={() => router.push('/add_funds/card_in')} variant="contained" className="rounded-full" color="primary">
                         Add Money
                     </Button>
-                    <Button onClick={() => router.push('/withdraw_funds')} variant="outlined"className="rounded-full ml-4" color="primary">
+                    <Button onClick={() => router.push('/withdraw_funds/overview')} variant="outlined"className="rounded-full ml-4" color="primary">
                         Withdraw Money
                     </Button>
                 </Container>

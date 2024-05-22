@@ -29,7 +29,7 @@ export default function Login() {
             const { data } = await axios.post('/api/auth/login', { email, password });
             login(data.token);
             setMessage('Login successful');
-            router.push('/');
+            router.push('/dashboard');
         } catch (error) {
             setMessage('Login failed');
         }

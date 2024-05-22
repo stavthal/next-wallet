@@ -1,10 +1,13 @@
+// File: pages/api/withdraw_funds.ts
+
 import { PrismaClient } from '@prisma/client';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { userId, amount, type, date, last_digits } = req.body;
+        const { userId, amount } = req.body;
 
         // Fetch the user from the database
         const user = await prisma.user.findUnique({
@@ -16,10 +19,16 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             return;
         }
 
+        // Check if the user has enough funds
+        if (user?.totalMoney < parseFloat(amount)) {
+            res.status(202).json({ error: 'Insufficient funds' });
+            return;
+        }
+
         // Update the user's balance
         const updatedUser = await prisma.user.update({
             where: { id: userId },
-            data: { totalMoney: user.totalMoney + parseFloat(amount) },
+            data: { totalMoney: user.totalMoney - parseFloat(amount) },
         });
 
         // Create a new transaction
@@ -28,10 +37,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 userId: userId,
                 amount: parseFloat(amount),
                 status: 'COMPLETED',
-                type: type,
-                description: 'Top-up with card',
-                date: new Date(date),
-                last_digits: last_digits,
+                type: 'WITHDRAW',
+                description: 'Withdrawal to account',
+                date: new Date(),
+                last_digits: 'XXXX',
             },
         });
 

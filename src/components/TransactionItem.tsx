@@ -33,14 +33,14 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, loading 
                     ? <AccountBalanceWalletIcon />
                     : <AccountBalanceIcon />
             }
-            <Typography className="font-bold max-md:text-sm" variant="body1">
+            <Typography className="font-bold max-md:text-sm w-4/12" variant="body1">
                 {loading ? <Skeleton width={120} /> : transaction.description}
             </Typography>
             <Typography className="text-gray-600 font-light max-md:text-sm">
                 {loading ? <Skeleton width={70} /> : `on ${formattedDate}`}
             </Typography>
 
-            <Typography className="text-sm md:text-base font-medium" color={transaction.type === 'DEPOSIT' ? green[500] : red[500]}>
+            <Typography className="text-sm md:text-base font-medium ml-2" align={"right"} color={transaction.type === 'DEPOSIT' ? green[500] : red[500]}>
                 {loading ? <Skeleton width={30} /> : `${transaction.type === 'DEPOSIT' ? '+' : '-'}${transaction.amount} €`}
             </Typography>
         </Box>

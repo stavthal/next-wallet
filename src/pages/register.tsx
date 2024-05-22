@@ -3,15 +3,12 @@ import {FormEvent, useState, useRef} from 'react';
 import {Container, TextField, Button, Typography, Link, FormLabel} from '@mui/material';
 import axios from 'axios';
 import {useRouter} from "next/router";
-import {useAuth} from "@/context/AuthContext";
 import Image from 'next/image';
-import {theme} from '@/util/theme';
 
 import walletLogo from '../../public/next-wallet-logo.webp';
 
 export default function Register() {
     const router = useRouter();
-    const {login} = useAuth();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -46,8 +43,8 @@ export default function Register() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            login(data.token); // Log the user in
             setMessage('Registration successful');
+            alert('Registration successful');
             await router.push('/'); // Navigate to the home page
         } catch (error: any) {
             if (error?.response?.data?.code === 'P2002') {
