@@ -7,7 +7,8 @@ import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
 import axios from "axios";
 import {User} from "@prisma/client";
-
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
 function Dashboard() {
     const { user } = useAuth();
     const router  = useRouter();
@@ -24,7 +25,9 @@ function Dashboard() {
                 setLoading(true);
                 const response = await axios.post(`/api/auth/get_user`, { userId: user?.id });
                 setUserData(response.data);
-                setLoading(false);
+                setTimeout(() => {
+                    setLoading(false);
+                }, (500)); // Setting timeout to simulate loading
             } catch (error) {
                 console.error('Failed to fetch user details:', error);
                 setLoading(false);
@@ -48,10 +51,16 @@ function Dashboard() {
                     Account Balance:
                 </Typography>
 
-                <Container className="p-8 m-0 mb-10 border-2 rounded-2xl shadow-xl">
-                    <Typography variant="h1" component="h2" className="max-md: text-2xl">
-                        {userData?.totalMoney?.toFixed(2)} €
-                    </Typography>
+                <Container className="flex flex-row p-8 m-0 mb-10 border-2 rounded-2xl shadow-xl">
+                    {
+                        <Typography variant="h1" component="h2" className="flex flex-row max-md: text-2xl">
+                            {loading ?
+                                <Skeleton width={100}/>
+                                :
+                                `${userData?.totalMoney?.toFixed(2)} €`
+                            }
+                        </Typography>
+                    }
                 </Container>
                 <Container className="ml-0 mt-4 pl-0 pt-4 border-t-2 flex flex-row">
                     <Button onClick={() => router.push('/add_funds/card_in')} variant="contained" className="rounded-full" color="primary">

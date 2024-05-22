@@ -12,7 +12,7 @@ const RequireAuth = (WrappedComponent: any) => {
             if (!user) {
                 router.push('/login');
             }
-        }, [user, router]);
+        }, [user]);
 
         return <WrappedComponent {...props} />;
     };

@@ -10,7 +10,7 @@ const AddMoney = () => {
     const cardNumber = router.query.cardNumber;
     const maskedCardNumber = cardNumber ? `**** **** **** ${cardNumber.slice(-4)}` : '';
 
-    const [amount, setAmount] = useState('');
+    const [amount, setAmount] = useState<string>('');
 
     const handleAmountChange = (e) => {
         const value = e.target.value;
@@ -18,6 +18,16 @@ const AddMoney = () => {
             setAmount(value);
         }
     };
+
+    const addAmount = (num: number) => {
+        setAmount(prevAmount => {
+            if (prevAmount && !isNaN(parseFloat(prevAmount))) {
+                return (parseFloat(prevAmount) + num).toString();
+            } else {
+                return num.toString();
+            }
+        });
+    }
 
     const handleAddMoney = async () => {
         try {
@@ -31,7 +41,7 @@ const AddMoney = () => {
 
             if (response.status === 200) {
                 alert('Money added successfully');
-                router.push('/dashboard');
+                await router.push('/dashboard');
             } else {
                 alert('Failed to add money');
             }
@@ -45,23 +55,37 @@ const AddMoney = () => {
             <Typography
                 component="h1"
                 variant="h2"
-                className="mt-4 border-b-2 max-md: text-2xl"
+                className="mt-4 border-b-2 max-md:text-2xl"
             >
                 Complete Top Up
             </Typography>
             <Typography
                 component="h2"
                 variant="h5"
-                className="mt-4"
+                className="mt-4 italic text-lg max-md:text-xl"
             >
                 Card: {maskedCardNumber}
             </Typography>
+            <Container className="mx-0 px-0 flex items-center content-center gap-2">
+                <Button onClick={() => addAmount(5)} color="primary" variant="contained">
+                    +5
+                </Button>
+                <Button onClick={() => addAmount(10)} color="primary" variant="contained">
+                    +10
+                </Button>
+                <Button onClick={() => addAmount(20)} color="primary" variant="contained">
+                    +20
+                </Button>
+                <Button onClick={() => addAmount(50)} color="primary" variant="contained">
+                    +50
+                </Button>
+            </Container>
             <Container className="mx-0 px-0 flex items-center content-center">
                 <TextField
                     label="Amount"
                     value={amount}
                     onChange={handleAmountChange}
-                    className="mt-4 w-11/12"
+                    className="mt-4 max-md:w-80 w-3/12"
                 />
                 <Typography
                     component="h1"
@@ -72,10 +96,10 @@ const AddMoney = () => {
                 </Typography>
             </Container>
 
-            <Button onClick={handleAddMoney} variant="contained" color="primary" className="mt-4">
+            <Button onClick={handleAddMoney} variant="contained" color="primary" className="mt-4 w-80">
                 Top Up
             </Button>
-            <Button onClick={router.back} variant="outlined" color="primary">
+            <Button onClick={router.back} variant="outlined" color="primary" className="w-80">
                 Back
             </Button>
         </Container>

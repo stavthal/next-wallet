@@ -18,15 +18,21 @@ function AddCard() {
 
     const handleAddCard = async (values) => {
         try {
-            // Randomly assign a card brand (VISA or MASTERCARD)
-            const brands = ['VISA', 'MASTERCARD'];
-            const brand = brands[Math.floor(Math.random() * brands.length)];
+            // Determine the card brand (VISA or MASTERCARD) based on the first digit (should be in backend)
+            let brand;
+            if (values.cardNumber.startsWith('4')) {
+                brand = 'VISA';
+            } else if (values.cardNumber.startsWith('5')) {
+                brand = 'MASTERCARD';
+            } else {
+                brand = 'GENERIC';
+            }
 
             // Randomly assign a card type (DEBIT or CREDIT)
             const types = ['DEBIT', 'CREDIT'];
             const cardType = types[Math.floor(Math.random() * types.length)];
 
-            // Merge the randomly assigned brand and card type with the rest of the form values
+            // Merge the determined brand and card type with the rest of the form values
             const cardData = { ...values, brand, cardType, userId: user.id };
 
             await axios.post('/api/add_card', cardData);

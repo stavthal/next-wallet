@@ -9,6 +9,7 @@ import {useRouter} from "next/router";
 import axios from 'axios';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import BackButton from "@/components/BackButton";
+import Skeleton from 'react-loading-skeleton';
 
 
 const AddMoney = () => {
@@ -23,7 +24,9 @@ const AddMoney = () => {
                 setLoading(true);
                 const response = await axios.get(`/api/get_cards?userId=${user?.id}`);
                 setCards(response.data);
-                setLoading(false);
+                setTimeout(() => {
+                    setLoading(false);
+                }, (1200)); // To simulate loading and show the skeletons
             } catch (error) {
                 setLoading(false);
                 console.error('Failed to fetch cards:', error);
@@ -33,6 +36,7 @@ const AddMoney = () => {
         fetchCards();
     }, []);
 
+    // @ts-ignore
     return (
         <>
             <Navbar />
@@ -45,22 +49,28 @@ const AddMoney = () => {
                 >
                     Top Up
                 </Typography>
-                {loading ? <Typography>Loading...</Typography>
-                    :
-                    cards.length === 0 ?
-                        <Typography className="my-2">You have no cards in your account.</Typography>
-                        :
+                <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 ">
+                    {loading ? (
+                        Array.from({ length: 3 }).map((_, index) => (
+                            <CardComponent
+                                loading={loading}
+                                key={index}
+                            />
+                        ))
+                    ) : (
                         cards.map((card, index) => (
                             <CardComponent
                                 card={card}
+                                loading={loading}
                                 key={card.id}
                             />)
                         )
-                }
-                <Container className="flex flex-row items-center ml-0 pl-0 mt-10">
+                    )}
+                </div>
+                <Container className="flex flex-row items-center ml-0 pl-0 pb-4 mt-10">
                     <IconButton
                         className="mr-2 text-white"
-                        onClick={() => router.push('/add_money/add_card')}
+                        onClick={() => router.push('/add_funds/add_card')}
                         sx={{backgroundColor: theme.palette.primary.main, '&:hover': {backgroundColor: theme.palette.primary.light}}}
                     >
                         <AddCardIcon/>
