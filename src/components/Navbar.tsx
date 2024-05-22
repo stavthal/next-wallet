@@ -7,8 +7,10 @@ import { useState } from 'react';
 
 import profileImage from '../../public/dummy-profile-pic.png';
 import {theme, colors } from "@/util/theme";
+import {useRouter} from "next/router";
 
 export default function Navbar() {
+    const router = useRouter();
     const { user, logout } = useAuth();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -56,6 +58,7 @@ export default function Navbar() {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
+                            <MenuItem onClick={() => router.push('/account/details')}>My Account</MenuItem>
                             <MenuItem onClick={logout}>Logout</MenuItem>
                         </Menu>
                     </>

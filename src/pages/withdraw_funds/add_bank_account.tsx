@@ -12,14 +12,20 @@ const validationSchema = Yup.object({
     beneficiaryName: Yup.string().required('Required'), // Add beneficiary validation
 });
 
+interface BankAccountFormValues {
+    accountNumber: string;
+    bankName: string;
+    beneficiaryName: string;
+}
+
 function AddBankAccount() {
     const { user } = useAuth();
     const router = useRouter();
 
-    const handleAddBankAccount = async (values) => {
+    const handleAddBankAccount = async (values: BankAccountFormValues) => {
         try {
             // Merge the form values with the user id
-            const accountData = { ...values, userId: user.id };
+            const accountData = { ...values, userId: user?.id };
 
             await axios.post('/api/add_bank_account', accountData);
             alert('Bank account added successfully');
@@ -43,7 +49,7 @@ function AddBankAccount() {
                     <Form>
                         <div className="flex flex-col gap-4">
                             <Field name="accountNumber" as={TextField} label="Account Number" fullWidth error={errors.accountNumber && touched.accountNumber} helperText={<ErrorMessage name="accountNumber" />}
-                                   onChange={(event) => {
+                                   onChange={(event: any) => {
                                        let value = event.target.value.replace(/\D/g, "");
                                        if (value.length > 10) {
                                            value = value.slice(0, 10);

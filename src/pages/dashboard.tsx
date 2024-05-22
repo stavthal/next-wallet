@@ -13,7 +13,7 @@ import RecentTransactions from "@/components/dashboard/recentTransactions/Recent
 function Dashboard() {
     const { user } = useAuth();
     const router  = useRouter();
-    const [userData, setUserData] = React.useState<User>(null);
+    const [userData, setUserData] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {

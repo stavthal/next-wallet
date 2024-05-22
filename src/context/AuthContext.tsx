@@ -9,6 +9,7 @@ interface AuthContextType {
     user: User | null;
     login: (token: string) => void;
     logout: () => void;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>; // Add setUser here
 }
 
 interface BankAccount {
@@ -106,7 +107,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, setUser, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

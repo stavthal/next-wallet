@@ -1,4 +1,3 @@
-// src/pages/register.tsx
 import {FormEvent, useState, useRef} from 'react';
 import {Container, TextField, Button, Typography, Link, FormLabel} from '@mui/material';
 import axios from 'axios';
@@ -173,7 +172,7 @@ export default function Register() {
                 </FormLabel>
                 <div className="flex row">
                     <Button variant="contained" color="primary" onClick={handleFileUpload}>
-                        Select File
+
                     </Button>
                     {selectedFileName && (
                         <Typography variant="body1" color="text.secondary" align="left" className="mt-2 ml-6">
@@ -190,7 +189,7 @@ export default function Register() {
                         {message}
                     </Typography>
                 )}
-                <Link href="/login" className="self-end mt-10 underline">
+                <Link href="/login" className="self-end mt-10 underline" passHref>
                     <Typography component="p" >Already have an account? Login here.</Typography>
                 </Link>
             </form>
