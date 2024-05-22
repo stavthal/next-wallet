@@ -31,6 +31,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                 amount: parseFloat(amount),
                 status: 'COMPLETED',
                 type: type,
+                description: 'Top-up with card',
                 date: new Date(date),
                 last_digits: last_digits,
             },

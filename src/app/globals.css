@@ -38,6 +38,32 @@ body {
   width: 100%;
 }
 
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 10px; /* Adjust the height of the scrollbar */
+  width: 6px;
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #fafafa;
+  border-radius: 20px;
+  margin: 10px 0;
+
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c2c2c2;
+  border-radius: 20px;
+  margin-top: 10px;
+
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #858585;
+}
+
+
 @media (max-width: 768px) {
   .background-image {
     background-size: cover;
@@ -50,3 +76,5 @@ body {
     text-wrap: balance;
   }
 }
+
+

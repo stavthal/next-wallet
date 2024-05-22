@@ -9,6 +9,7 @@ import axios from "axios";
 import {User} from "@prisma/client";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
+import RecentTransactions from "@/components/dashboard/recentTransactions/RecentTransactions";
 function Dashboard() {
     const { user } = useAuth();
     const router  = useRouter();
@@ -66,10 +67,12 @@ function Dashboard() {
                     <Button onClick={() => router.push('/add_funds/card_in')} variant="contained" className="rounded-full" color="primary">
                         Add Money
                     </Button>
-                    <Button variant="outlined"className="rounded-full ml-4" color="primary">
+                    <Button onClick={() => router.push('/withdraw_funds')} variant="outlined"className="rounded-full ml-4" color="primary">
                         Withdraw Money
                     </Button>
                 </Container>
+
+                <RecentTransactions />
             </Container>
         </>
     );
