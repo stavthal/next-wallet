@@ -9,6 +9,12 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     if (req.method === 'POST') {
         const { userId, amount } = req.body;
 
+        // Check if the amount is valid
+        if (parseFloat(amount) <= 0) {
+            res.status(400).json({ error: 'Invalid amount. Amount must be greater than zero.' });
+            return;
+        }
+
         // Fetch the user from the database
         const user = await prisma.user.findUnique({
             where: { id: userId },
