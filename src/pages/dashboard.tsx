@@ -3,12 +3,36 @@ import Navbar from "@/components/Navbar";
 import RequireAuth from "@/components/RequireAuth";
 import { Container, Typography, Avatar, Button } from "@mui/material";
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
+import axios from "axios";
+import {User} from "@prisma/client";
 
 function Dashboard() {
     const { user } = useAuth();
     const router  = useRouter();
+    const [userData, setUserData] = React.useState<User>(null);
+    const [loading, setLoading] = React.useState(true);
+
+    useEffect(() => {
+        if (!user) {
+            router.push('/login');
+        }
+
+        const fetchUserDetails = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.post(`/api/auth/get_user`, { userId: user?.id });
+                setUserData(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to fetch user details:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchUserDetails();
+    }, [user?.id]);
 
     return (
         <>
@@ -25,8 +49,8 @@ function Dashboard() {
                 </Typography>
 
                 <Container className="p-8 m-0 mb-10 border-2 rounded-2xl shadow-xl">
-                    <Typography variant="h1" component="h2">
-                        {user?.totalMoney?.toFixed(2)} €
+                    <Typography variant="h1" component="h2" className="max-md: text-2xl">
+                        {userData?.totalMoney?.toFixed(2)} €
                     </Typography>
                 </Container>
                 <Container className="ml-0 mt-4 pl-0 pt-4 border-t-2 flex flex-row">

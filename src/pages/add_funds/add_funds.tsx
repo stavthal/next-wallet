@@ -45,7 +45,7 @@ const AddMoney = () => {
             <Typography
                 component="h1"
                 variant="h2"
-                className="mt-4 border-b-2"
+                className="mt-4 border-b-2 max-md: text-2xl"
             >
                 Complete Top Up
             </Typography>
@@ -56,12 +56,22 @@ const AddMoney = () => {
             >
                 Card: {maskedCardNumber}
             </Typography>
-            <TextField
-                label="Amount"
-                value={amount}
-                onChange={handleAmountChange}
-                className="mt-4"
-            />
+            <Container className="mx-0 px-0 flex items-center content-center">
+                <TextField
+                    label="Amount"
+                    value={amount}
+                    onChange={handleAmountChange}
+                    className="mt-4 w-11/12"
+                />
+                <Typography
+                    component="h1"
+                    variant="h4"
+                    className="mt-4 ml-2 w-1/12"
+                >
+                    €
+                </Typography>
+            </Container>
+
             <Button onClick={handleAddMoney} variant="contained" color="primary" className="mt-4">
                 Top Up
             </Button>
