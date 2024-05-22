@@ -43,6 +43,7 @@ model Transaction {
   id          Int      @id @default(autoincrement())
   type        String
   amount      Float
+  last_digits String
   userId      Int
   date        DateTime @default(now())
   description String?
