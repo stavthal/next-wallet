@@ -27,7 +27,7 @@ model Card {
   cardType   String
   cardNumber String
   expiryDate String
-  cvv        Int
+  cvv        String
 }
 
 model BankAccount {

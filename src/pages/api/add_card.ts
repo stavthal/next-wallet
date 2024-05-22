@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 cardType,
                 cardNumber,
                 expiryDate,
-                cvv: Number(cvv),
+                cvv,
                 userId,
             },
         });

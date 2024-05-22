@@ -6,9 +6,11 @@ import {useRouter} from "next/router";
 import Image from 'next/image';
 
 import walletLogo from '../../public/next-wallet-logo.webp';
+import {useAuth} from "@/context/AuthContext";
 
 export default function Register() {
     const router = useRouter();
+    const { login } = useAuth();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -24,6 +26,8 @@ export default function Register() {
     const handleRegister = async (e: FormEvent<HTMLElement>): Promise<void> => {
         e.preventDefault();
 
+
+
         if (password !== confirmPassword) {
             setMessage('Passwords do not match');
             return;
@@ -38,14 +42,21 @@ export default function Register() {
         }
 
         try {
-            const { data } = await axios.post('/api/auth/register', formData, {
+            await axios.post('/api/auth/register', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
+            // Login request
+            const { data } = await axios.post('/api/auth/login', { email, password });
+            // Store the token in local storage and update the user state
+            localStorage.setItem('token', data.token);
+
             setMessage('Registration successful');
             alert('Registration successful');
-            await router.push('/'); // Navigate to the home page
+            login(data.token);
+            await router.push('/dashboard');
         } catch (error: any) {
             if (error?.response?.data?.code === 'P2002') {
                 setMessage("Email already exists");

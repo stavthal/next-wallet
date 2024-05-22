@@ -12,11 +12,17 @@ const validationSchema = Yup.object({
     cvv: Yup.string().required('Required').matches(/^\d{3}$/, 'CVV must be 3 digits'),
 });
 
+interface CardFormValues {
+    cardNumber: string;
+    expiryDate: string;
+    cvv: string;
+};
+
 function AddCard() {
     const { user } = useAuth();
     const router = useRouter();
 
-    const handleAddCard = async (values) => {
+    const handleAddCard = async (values: CardFormValues) => {
         try {
             // Determine the card brand (VISA or MASTERCARD) based on the first digit (should be in backend)
             let brand;
@@ -33,7 +39,7 @@ function AddCard() {
             const cardType = types[Math.floor(Math.random() * types.length)];
 
             // Merge the determined brand and card type with the rest of the form values
-            const cardData = { ...values, brand, cardType, userId: user.id };
+            const cardData = { ...values, brand, cardType,  userId: user?.id };
 
             await axios.post('/api/add_card', cardData);
             alert('Card added successfully');
@@ -58,7 +64,7 @@ function AddCard() {
                     <Form>
                         <div className="flex flex-col gap-4">
                             <Field name="cardNumber" as={TextField} label="Card Number" fullWidth error={errors.cardNumber && touched.cardNumber} helperText={<ErrorMessage name="cardNumber" />}
-                                   onChange={(event) => {
+                                   onChange={(event: any) => {
                                        let value = event.target.value.replace(/\D/g, "");
                                        if (value.length > 16) {
                                            value = value.slice(0, 16);
@@ -68,7 +74,7 @@ function AddCard() {
                                    }}
                             />
                             <Field name="expiryDate" as={TextField} label="Expiry Date" fullWidth error={errors.expiryDate && touched.expiryDate} helperText={<ErrorMessage name="expiryDate" />}
-                                   onChange={(event) => {
+                                   onChange={(event: any) => {
                                        let value = event.target.value.replace(/\D/g, "");
                                        if (value.length > 4) {
                                            value = value.slice(0, 4);
@@ -82,7 +88,7 @@ function AddCard() {
                                    }}
                             />
                             <Field name="cvv" as={TextField} label="CVV" fullWidth error={errors.cvv && touched.cvv} helperText={<ErrorMessage name="cvv" />}
-                                   onChange={(event) => {
+                                   onChange={(event: any) => {
                                        let value = event.target.value.replace(/\D/g, "");
                                        if (value.length > 3) {
                                            value = value.slice(0, 3);

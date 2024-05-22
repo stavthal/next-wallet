@@ -39,7 +39,17 @@ const RecentTransactions: React.FC = () => {
         )
     }
 
-
+    if (!transactions.length) {
+        return (
+            <Box className="max-md:max-w-full md:w-3/5  custom-scrollbar border-2 rounded-xl p-4 mt-10 max-h-50" style={{ height: '300px', maxHeight: '300px', overflow: 'auto' }}>
+                <Container className="pl-0 content-start items-start">
+                    <Typography variant="h6" component="h2" gutterBottom>
+                        No transactions found
+                    </Typography>
+                </Container>
+            </Box>
+        );
+    }
     return (
         <Box className="max-md:max-w-full md:w-3/5  custom-scrollbar border-2 rounded-xl p-4 mt-10 max-h-50" style={{ height: '300px', maxHeight: '300px', overflow: 'auto' }}>
             <Container className="pl-0 content-start items-start">
