@@ -28,17 +28,6 @@ body {
   /*  rgb(var(--background-start-rgb));*/
 }
 
-.background-image {
-  background: url('../media/background-dark.webp') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  min-height: 100vh;
-  width: 100%;
-}
-
-
 .custom-scrollbar::-webkit-scrollbar {
   height: 10px; /* Adjust the height of the scrollbar */
   width: 6px;

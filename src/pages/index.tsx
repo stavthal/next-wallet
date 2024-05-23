@@ -12,6 +12,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import SecurityIcon from '@mui/icons-material/Security';
 
 import walletLogo from '../media/next-wallet-logo.webp';
+import backgroundImage from '@/media/background-dark.webp';
 import Navbar from '../components/Navbar';
 import jwt from 'jsonwebtoken';
 
@@ -26,7 +27,20 @@ export default function Home() {
     }, [user, router]);
 
     return (
-        <div className="background-image">
+        <div
+            style={{
+                backgroundImage: `url(${backgroundImage.src})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center center',
+                backgroundAttachment: 'fixed',
+                WebkitBackgroundSize: 'cover',
+                MozBackgroundSize: 'cover',
+                OBackgroundSize: 'cover',
+                backgroundSize: 'cover',
+                minHeight: '100vh',
+                width: '100%',
+            }}
+        >
             <Navbar />
             <Container className="flex flex-col items-center mt-14 pb-10 rounded-2xl bg-opacity-90 bg-white max-md:w-11/12">
                 <>
