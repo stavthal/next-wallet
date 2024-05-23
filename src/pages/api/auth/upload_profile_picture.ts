@@ -13,6 +13,11 @@ export const config = {
     },
 };
 
+interface MulterRequest extends NextApiRequest {
+    file: any;
+}
+
+
 const uploadDir = path.join(process.cwd(), 'public/uploads');
 
 // Ensure the upload directory exists
@@ -26,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end();
     }
 
-    upload.single('file')(req, res, async (err: any) => {
+    upload.single('file')(req as any, res as any, async (err: any) => {
         if (err) {
             console.error('Error uploading file:', err);
             return res.status(500).json({ error: 'Failed to upload file' });
@@ -39,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
-            const profilePicture = `/uploads/${path.basename(req.file.path)}`;
+            const profilePicture = `/uploads/${path.basename((req as MulterRequest).file.path)}`;
 
             const user = await prisma.user.update({
                 where: { id: Number(userId) },

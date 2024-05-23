@@ -7,7 +7,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'; // Bank icon
 
 interface BankAccountProps {
-    account: BankAccountType;
+    account?: BankAccountType;
     loading: boolean;
 }
 

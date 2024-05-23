@@ -13,6 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { email, password } = req.body;
 
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    if (!JWT_SECRET) {
+        throw new Error('Missing JWT_SECRET environment variable');
+    }
+
     try {
         const user = await prisma.user.findUnique({
             where: { email },
@@ -36,14 +42,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const token = jwt.sign(
             {
                 userId: user.id,
-                name: user.name ,
+                name: user.name,
                 email: user.email,
                 profilePicture: user.profilePicture,
                 totalMoney: user.totalMoney,
                 bankAccounts: user?.bankAccounts,
                 cards: user?.cards,
                 transactions: user?.transactions,
-            }, process.env.JWT_SECRET);
+            }, JWT_SECRET);
 
 
         res.status(200).json({ token });

@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.18",
     "@prisma/client": "^5.14.0",
+    "autoprefixer": "^10.4.19",
     "axios": "^1.7.1",
     "bcrypt": "^5.1.1",
     "formidable": "^3.5.1",
@@ -23,11 +24,15 @@
     "react": "^18",
     "react-dom": "^18",
     "react-loading-skeleton": "^3.4.0",
+    "sharp": "^0.33.4",
     "yup": "^1.4.0"
   },
   "devDependencies": {
     "@mui/material": "^5.15.18",
+    "@types/bcrypt": "^5.0.2",
     "@types/formidable": "^3.4.5",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/multer": "^1.4.11",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -1,10 +1,11 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import {useRouter} from "next/router";
 import Image from "next/image";
 import {theme} from '../util/theme';
+
 
 import walletLogo from '../../public/next-wallet-logo.webp';
 
@@ -13,11 +14,6 @@ export default function Login() {
     const {user} = useAuth();
     const { login } = useAuth();
 
-    useEffect(() => {
-        if (user) {
-            router.push('/dashboard');
-        }
-    }, []);
 
 
     const [email, setEmail] = useState<string>('');

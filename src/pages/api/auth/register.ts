@@ -14,6 +14,10 @@ export const config = {
     },
 };
 
+interface MulterRequest extends NextApiRequest {
+    file: any;
+}
+
 const uploadDir = path.join(process.cwd(), 'public/uploads');
 
 // Ensure the upload directory exists
@@ -27,13 +31,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end();
     }
 
-    upload.single('profilePicture')(req, res, async (err) => {
+    const { email, password, name } = (req as MulterRequest).body;
+
+
+    upload.single('profilePicture')(req as any, res as any, async (err) => {
         if (err) {
             console.error('Error uploading file:', err);
             return res.status(500).json({ error: 'Failed to upload file' });
         }
 
-        const { email, password, name } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({ error: 'Email and password are required' });
@@ -47,8 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     email: email as string,
                     password: hashedPassword,
                     name: name as string,
-                    profilePicture: req.file
-                        ? `/uploads/${path.basename(req.file.path)}`
+                    profilePicture: (req as MulterRequest).file
+                        ? `/uploads/${path.basename((req as MulterRequest).file.path)}`
                         : null,
                 },
             });
@@ -56,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(201).json({ message: 'User created', user });
         } catch (error) {
             console.error('Error registering user:', error);
-            res.status(500).json({ code: error?.code , error: 'User creation failed' });
+            res.status(500).json({ error: error , errorMessage: 'User creation failed' });
         }
     });
 }

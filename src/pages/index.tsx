@@ -1,10 +1,10 @@
-// src/pages/card_in.tsx
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Container, Typography, Button, Box } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import '@/app/globals.css';
 
 
 // MUI Icons
@@ -15,6 +15,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 
 import walletLogo from '../../public/next-wallet-logo.webp';
 import Navbar from '../components/Navbar';
+import jwt from "jsonwebtoken";
 
 export default function Home() {
     const { user } = useAuth();
@@ -95,4 +96,41 @@ export default function Home() {
         </Container>
         </div>
     );
+}
+
+
+export async function getServerSideProps(context: any) {
+    const { req, res } = context;
+
+    // Replace this with your actual logic to check if the user is authenticated
+    const auth = await isAuthenticated(req);
+
+    if (!auth) {
+        res.setHeader('location', '/login');
+        res.statusCode = 302;
+        res.end();
+        return { props: {} };
+    }
+
+    return {
+        props: {},
+    };
+}
+
+async function isAuthenticated(req: any) {
+    const token = req.cookies.token;
+    const JWT_SECRET = process.env.JWT_SECRET!;
+
+
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        return true;
+    } catch (err) {
+        return false;
+    }
 }

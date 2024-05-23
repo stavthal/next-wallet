@@ -189,7 +189,7 @@ export default function Register() {
                         {message}
                     </Typography>
                 )}
-                <Link href="/login" className="self-end mt-10 underline" passHref>
+                <Link href="/login" className="self-end mt-10 underline">
                     <Typography component="p" >Already have an account? Login here.</Typography>
                 </Link>
             </form>

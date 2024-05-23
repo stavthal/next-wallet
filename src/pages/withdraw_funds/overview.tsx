@@ -59,7 +59,7 @@ const BankAccounts = () => {
                             <BankAccountComponent
                                 account={account}
                                 loading={loading}
-                                key={account.id}
+                                key={index}
                             />)
                         )
                     )}

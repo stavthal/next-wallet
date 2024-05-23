@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import {Box, Container, Typography, CircularProgress, Avatar, Button, IconButton} from '@mui/material';
+import {Box, Container, Typography, Avatar, IconButton} from '@mui/material';
 import axios from 'axios';
 import Navbar from "@/components/Navbar";
 import {useAuth} from "@/context/AuthContext";
@@ -11,12 +11,10 @@ interface User {
     id: string;
     name: string;
     email: string;
-    profilePicture: string; // Assuming the user's profile picture URL is stored here
-    // Add other user properties here
+    profilePicture?: string;
 }
 
 export default function UserDetails() {
-    const [loading, setLoading] = useState<boolean>(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { user, setUser } = useAuth();
@@ -30,8 +28,6 @@ export default function UserDetails() {
                 setUser(response.data);
             } catch (error) {
                 console.error('Failed to fetch user:', error);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -49,15 +45,14 @@ export default function UserDetails() {
         if (file) {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('userId', user?.id); // Include the user's ID in the request
-
+            formData.append('userId', user?.id.toString() || '');
             try {
                 const response = await axios.post('/api/auth/upload_profile_picture', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                setUser(prevState => ({...prevState, profilePicture: response.data.url}));
+                setUser((prevState) => prevState ? {...prevState, profilePicture: response.data.url} : null);
             } catch (error) {
                 console.error('Failed to upload profile picture:', error);
             } finally {

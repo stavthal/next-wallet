@@ -12,13 +12,12 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 
 interface CardProps {
-    card: CardType;
+    card?: CardType;
     loading: boolean;
 }
 
 const CardComponent: React.FC<CardProps> = ({ card, loading }) => {
-    const cardType = card?.cardType.charAt(0).toUpperCase() + card?.cardType.slice(1).toLowerCase();
-    const router = useRouter();
+    const cardType = card?.cardType ? card.cardType.charAt(0).toUpperCase() + card.cardType.slice(1).toLowerCase() : '';    const router = useRouter();
 
 
     const handleAddMoney = () => {

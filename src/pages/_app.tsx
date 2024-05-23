@@ -1,4 +1,3 @@
-// src/pages/_app.tsx
 import { AppProps } from 'next/app';
 import { AuthProvider } from '../context/AuthContext';
 import CssBaseline from '@mui/material/CssBaseline';

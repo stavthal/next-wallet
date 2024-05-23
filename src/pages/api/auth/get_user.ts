@@ -1,10 +1,11 @@
 // File: pages/api/get_user.js
 
 import { PrismaClient } from '@prisma/client';
+import {NextApiRequest, NextApiResponse} from "next";
 
 const prisma = new PrismaClient();
 
-export default async function handle(req, res) {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { userId } = req.body;
 

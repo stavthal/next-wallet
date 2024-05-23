@@ -13,7 +13,7 @@ import RecentTransactions from "@/components/dashboard/recentTransactions/Recent
 function Dashboard() {
     const { user } = useAuth();
     const router  = useRouter();
-    const [userData, setUserData] = React.useState(null);
+    const [userData, setUserData] = React.useState<User | null>(null);
     const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {
@@ -58,7 +58,7 @@ function Dashboard() {
                             {loading ?
                                 <Skeleton width={100}/>
                                 :
-                                `${userData?.totalMoney?.toFixed(2)} €`
+                                userData ? `${userData.totalMoney.toFixed(2)} €` : null
                             }
                         </Typography>
                     }

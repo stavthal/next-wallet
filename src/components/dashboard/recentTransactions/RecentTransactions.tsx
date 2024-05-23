@@ -32,7 +32,7 @@ const RecentTransactions: React.FC = () => {
             <Box className="max-md:max-w-full md:w-3/5  custom-scrollbar border-2 rounded-xl p-4 mt-10 max-h-50" style={{ height: '300px', maxHeight: '300px', overflow: 'auto' }}>
                 <Container className="pl-0 content-start items-start">
                     {Array(3).fill(null).map((_, index) => (
-                        <TransactionItem key={index} transaction={{}} loading={loading} />
+                        <TransactionItem key={index} loading={loading} />
                     ))}
                 </Container>
             </Box>
@@ -53,8 +53,8 @@ const RecentTransactions: React.FC = () => {
     return (
         <Box className="max-md:max-w-full md:w-3/5  custom-scrollbar border-2 rounded-xl p-4 mt-10 max-h-50" style={{ height: '300px', maxHeight: '300px', overflow: 'auto' }}>
             <Container className="pl-0 content-start items-start">
-                {transactions.slice(0, 10).map(transaction => (
-                    <TransactionItem key={transaction.id} transaction={transaction} loading={loading} />
+                {transactions.slice(0, 10).map((transaction, index) => (
+                    <TransactionItem key={index} transaction={transaction} loading={loading} />
                 ))}
             </Container>
         </Box>

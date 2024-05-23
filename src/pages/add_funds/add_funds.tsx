@@ -12,7 +12,7 @@ const AddMoney = () => {
 
     const [amount, setAmount] = useState<string>('');
 
-    const handleAmountChange = (e) => {
+    const handleAmountChange = (e: any) => {
         const value = e.target.value;
         if (!isNaN(value)) {
             setAmount(value);

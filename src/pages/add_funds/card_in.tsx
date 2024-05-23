@@ -62,7 +62,7 @@ const AddMoney = () => {
                             <CardComponent
                                 card={card}
                                 loading={loading}
-                                key={card.id}
+                                key={index}
                             />)
                         )
                     )}
