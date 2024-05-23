@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         async function loadUserFromCookies() {
             try {
                 setLoading(true);
-                const { data } = await axios.get('/api/auth/validate'); // Assuming this endpoint checks cookies and returns user data
+                const { data } = await axios.get('/api/auth/validate');
                 setUser(data.user);
             } catch (error) {
                 console.error('Failed to validate user:', error);
