@@ -17,21 +17,17 @@ function Dashboard() {
     const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {
-        if (!user) {
-            router.push('/login');
-        }
-
         const fetchUserDetails = async () => {
             try {
                 setLoading(true);
                 const response = await axios.post(`/api/auth/get_user`, { userId: user?.id });
                 setUserData(response.data);
-                setTimeout(() => {
-                    setLoading(false);
-                }, (500)); // Setting timeout to simulate loading
             } catch (error) {
                 console.error('Failed to fetch user details:', error);
-                setLoading(false);
+            } finally {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000); // just to show skeletons for a bit longer
             }
         };
 
@@ -46,7 +42,6 @@ function Dashboard() {
                     <Typography variant="h4" component="h1" gutterBottom className="border-b-2">
                         Welcome, {user?.name}
                     </Typography>
-                    {/*<Avatar alt={user?.name} src={user?.profilePicture} />*/}
                 </Container>
                 <Typography variant="h6" component="h2" gutterBottom className="mt-10">
                     Account Balance:

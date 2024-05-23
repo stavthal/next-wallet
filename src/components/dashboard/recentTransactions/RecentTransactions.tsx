@@ -15,17 +15,18 @@ const RecentTransactions: React.FC = () => {
             try {
                 const response = await axios.get('/api/get_transactions', { params: { userId: user?.id } });
                 setTransactions(response.data);
-                setTimeout(() => {
-                    setLoading(false);
-                }, (1000));
             } catch (err) {
                 console.error(err);
                 setLoading(false);
+            } finally {
+                setTimeout(() => {
+                    setLoading(false);
+                }, (1000)); // to show skeletons a bit longer
             }
         };
 
         fetchTransactions();
-    }, []);
+    }, [user?.id]);
 
     if (loading) {
         return (

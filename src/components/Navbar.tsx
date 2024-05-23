@@ -8,10 +8,12 @@ import { useState } from 'react';
 import profileImage from '../../public/dummy-profile-pic.png';
 import {theme, colors } from "@/util/theme";
 import {useRouter} from "next/router";
+import {User} from "@prisma/client";
 
 export default function Navbar() {
     const router = useRouter();
     const { user, logout } = useAuth();
+    const [userData, setUserData] = useState<User | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,11 +41,11 @@ export default function Navbar() {
                 <Typography variant="h6" component="div" className="max-md:invisible" sx={{ flexGrow: 1 }}>
                     Next Wallet
                 </Typography>
-                {user ? (
+                {userData ? (
                     <>
                         <Button color="inherit" onClick={handleClick}>
                             <Image
-                                src={user?.profilePicture ? user.profilePicture : profileImage}
+                                src={userData?.profilePicture ? userData.profilePicture : profileImage}
                                 alt="profile"
                                 width={50}
                                 height={50}

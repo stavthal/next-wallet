@@ -7,9 +7,11 @@ import {Transaction} from "@prisma/client";
 
 interface AuthContextType {
     user: User | null;
+    loading: boolean;
     login: (token: string) => void;
     logout: () => void;
-    setUser: React.Dispatch<React.SetStateAction<User | null>>; // Add setUser here
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
+    isAuthenticated: () => boolean;
 }
 
 interface BankAccount {
@@ -57,10 +59,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
         try {
+            setLoading(true);
             const token = localStorage.getItem('token')
 
             if (token) {
@@ -80,8 +84,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } catch(err) {
             console.error(err);
             logout();
+        } finally {
+            setLoading(false);
         }
-    }, []);
+    }, [user?.id]);
 
     const login = (token: string) => {
         localStorage.setItem('token', token);
@@ -106,8 +112,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         router.push('/'); // Navigate to the home page
     };
 
+    const isAuthenticated = () => {
+        if (localStorage.getItem('token')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, setUser, login, logout }}>
+        <AuthContext.Provider value={{ user, setUser, loading, isAuthenticated, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
