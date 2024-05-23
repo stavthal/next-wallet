@@ -18,8 +18,7 @@ export default function UserDetails() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { user, setUser } = useAuth();
-    const [userState, setUserState] = useState<User | null>(null);
-    const router = useRouter();
+    const [userState, setUserState] = useState<any>(null);
 
 
     useEffect(() => {
@@ -33,7 +32,7 @@ export default function UserDetails() {
         };
 
         fetchUser();
-    }, [user?.id]);
+    }, [user?.id,]);
 
     const handleUploadClick = () => {
         if (fileInputRef.current) {
@@ -53,11 +52,22 @@ export default function UserDetails() {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                // setUser((prevState) => prevState ? {...prevState, profilePicture: response.data.url} : null);
+
+                // Update the user state with the new profile picture
+                if (response.data.user && user?.id) {
+                    setUser({
+                        ...user,
+                        profilePicture: response.data.user.profilePicture,
+                    });
+                    setUserState({
+                        ...user,
+                        profilePicture: response.data.user.profilePicture,
+                    });
+                } else {
+                    alert('Failed to upload profile picture');
+                }
             } catch (error) {
                 console.error('Failed to upload profile picture:', error);
-            } finally {
-                router.reload();
             }
         }
     };

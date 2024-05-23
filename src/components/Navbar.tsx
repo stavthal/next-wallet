@@ -3,16 +3,16 @@ import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem } from '@mui/material';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import profileImage from '../../public/dummy-profile-pic.png';
-import {theme, colors } from "@/util/theme";
+import { colors } from "@/util/theme";
 import {useRouter} from "next/router";
-import {User} from "@prisma/client";
 
 export default function Navbar() {
     const router = useRouter();
     const { user, logout } = useAuth();
+    const [userPicture, setUserPicture] = useState<string | undefined>(user?.profilePicture);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -22,6 +22,10 @@ export default function Navbar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    useEffect(() => {
+        setUserPicture(user?.profilePicture);
+    }, [user]);
 
     return (
         <AppBar position="static">
@@ -44,7 +48,7 @@ export default function Navbar() {
                     <>
                         <Button color="inherit" onClick={handleClick}>
                             <Image
-                                src={user?.profilePicture ? user.profilePicture : profileImage}
+                                src={userPicture ? userPicture : profileImage}
                                 alt="profile"
                                 width={50}
                                 height={50}
