@@ -13,6 +13,7 @@ import Image from 'next/image';
 
 import walletLogo from '../media/next-wallet-logo.webp';
 import { useAuth } from '@/context/AuthContext';
+import { enqueueSnackbar } from 'notistack';
 
 export default function Register() {
     const router = useRouter();
@@ -40,7 +41,7 @@ export default function Register() {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            setMessage('Passwords do not match');
+            enqueueSnackbar('Passwords do not match', { variant: 'error' });
             return;
         }
 
@@ -67,13 +68,12 @@ export default function Register() {
             // Store the token in local storage and update the user state
             localStorage.setItem('token', data.token);
 
-            setMessage('Registration successful');
-            alert('Registration successful');
+            enqueueSnackbar('Successfully registered', { variant: 'success' });
             login(data.token);
             await router.push('/dashboard');
         } catch (error: any) {
             if (error?.response?.data?.code === 'P2002') {
-                setMessage('Email already exists');
+                enqueueSnackbar('Email already exists', { variant: 'warning' });
             } else {
                 setMessage(error?.response?.data?.error); // Display the error message
             }

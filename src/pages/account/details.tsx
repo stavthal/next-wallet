@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/context/AuthContext';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { enqueueSnackbar } from 'notistack';
 
 export default function UserDetails() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,9 +58,15 @@ export default function UserDetails() {
                         ...user,
                         profilePicture: response.data.user.profilePicture,
                     });
+                    enqueueSnackbar('Successfully uploaded profile picture', {
+                        variant: 'success',
+                    });
                 }
             } catch (error) {
                 console.error('Failed to upload profile picture:', error);
+                enqueueSnackbar('Failed to upload profile picture', {
+                    variant: 'error',
+                });
             }
         }
     };

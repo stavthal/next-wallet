@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { theme } from '../util/theme';
 
 import walletLogo from '../media/next-wallet-logo.webp';
+import { enqueueSnackbar } from 'notistack';
 
 export default function Login() {
     const router = useRouter();
@@ -30,10 +31,10 @@ export default function Login() {
                 password,
             });
             login(data.token);
-            setMessage('Login successful');
+            enqueueSnackbar('Successfully logged in', { variant: 'success' });
             router.push('/dashboard');
         } catch (error) {
-            setMessage('Login failed');
+            enqueueSnackbar('Failed to login', { variant: 'error' });
         }
     };
 
