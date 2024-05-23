@@ -4,8 +4,8 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
-import RequireAuth from '@/components/RequireAuth';
 import { enqueueSnackbar } from 'notistack';
+import jwt from 'jsonwebtoken';
 
 const validationSchema = Yup.object({
     accountNumber: Yup.string()
@@ -21,7 +21,7 @@ interface BankAccountFormValues {
     beneficiaryName: string;
 }
 
-function AddBankAccount() {
+export default function AddBankAccount() {
     const { user } = useAuth();
     const router = useRouter();
 
@@ -56,7 +56,7 @@ function AddBankAccount() {
                     accountNumber: '',
                     bankName: '',
                     beneficiaryName: '',
-                }} // Add beneficiary initial value
+                }}
                 validationSchema={validationSchema}
                 onSubmit={handleAddBankAccount}
             >
@@ -131,4 +131,36 @@ function AddBankAccount() {
     );
 }
 
-export default RequireAuth(AddBankAccount);
+export async function getServerSideProps(context: any) {
+    const { req, res } = context;
+
+    const auth = await isAuthenticated(req);
+
+    if (!auth) {
+        res.setHeader('location', '/login');
+        res.statusCode = 302;
+        res.end();
+        return { props: {} };
+    }
+
+    return {
+        props: {},
+    };
+}
+
+async function isAuthenticated(req: any) {
+    const token = req.cookies.token;
+    const JWT_SECRET = process.env.JWT_SECRET!;
+
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        return true;
+    } catch (err) {
+        return false;
+    }
+}

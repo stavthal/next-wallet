@@ -13,7 +13,8 @@ import {
     Card,
     Transaction,
     User as UserType,
-} from '@prisma/client'; // Assuming you export User type from here
+} from '@prisma/client';
+import { enqueueSnackbar } from 'notistack'; // Assuming you export User type from here
 
 interface AuthContextType {
     user: User | null;
@@ -90,10 +91,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             .post('/api/auth/logout')
             .then(() => {
                 setUser(null);
-                router.push('/login'); // Redirect to login page after logout
+                enqueueSnackbar('Logged out successfully', {
+                    variant: 'success',
+                    autoHideDuration: 3000,
+                });
+                router.push('/'); // Redirect user after logout
             })
             .catch((error) => {
                 console.error('Logout failed:', error);
+                enqueueSnackbar('Failed to logout', {
+                    variant: 'error',
+                    autoHideDuration: 4000,
+                });
             });
     };
 

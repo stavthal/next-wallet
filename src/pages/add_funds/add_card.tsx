@@ -4,8 +4,8 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
-import RequireAuth from '@/components/RequireAuth';
 import { enqueueSnackbar } from 'notistack';
+import jwt from 'jsonwebtoken';
 
 const validationSchema = Yup.object({
     cardNumber: Yup.string()
@@ -28,7 +28,7 @@ interface CardFormValues {
     cvv: string;
 }
 
-function AddCard() {
+export default function AddCard() {
     const { user } = useAuth();
     const router = useRouter();
 
@@ -167,4 +167,36 @@ function AddCard() {
     );
 }
 
-export default RequireAuth(AddCard);
+export async function getServerSideProps(context: any) {
+    const { req, res } = context;
+
+    const auth = await isAuthenticated(req);
+
+    if (!auth) {
+        res.setHeader('location', '/login');
+        res.statusCode = 302;
+        res.end();
+        return { props: {} };
+    }
+
+    return {
+        props: {},
+    };
+}
+
+async function isAuthenticated(req: any) {
+    const token = req.cookies.token;
+    const JWT_SECRET = process.env.JWT_SECRET!;
+
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        return true;
+    } catch (err) {
+        return false;
+    }
+}

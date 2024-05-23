@@ -43,6 +43,11 @@ export default function Navbar() {
         }
     }, [user?.profilePicture]);
 
+    const handleLogout = () => {
+        logout();
+        router.push('/login');
+    };
+
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -103,7 +108,7 @@ export default function Navbar() {
                             >
                                 My Account
                             </MenuItem>
-                            <MenuItem onClick={logout}>Logout</MenuItem>
+                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </Menu>
                     </>
                 ) : (

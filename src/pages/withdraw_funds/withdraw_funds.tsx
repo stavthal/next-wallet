@@ -4,11 +4,9 @@ import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { enqueueSnackbar } from 'notistack';
-import { response } from 'express';
-import { Simulate } from 'react-dom/test-utils';
-import error = Simulate.error;
+import jwt from 'jsonwebtoken';
 
-const AddMoney = () => {
+export default function AddMoney() {
     const { user } = useAuth();
     const router = useRouter();
     const cardNumber = router.query.cardNumber;
@@ -48,7 +46,7 @@ const AddMoney = () => {
 
             if (response.status === 200) {
                 await router.push('/dashboard');
-                enqueueSnackbar('Successfull withdrawal of funds', {
+                enqueueSnackbar('Successful withdrawal of funds', {
                     variant: 'success',
                     autoHideDuration: 3000,
                 });
@@ -146,6 +144,38 @@ const AddMoney = () => {
             </Button>
         </Container>
     );
-};
+}
 
-export default AddMoney;
+export async function getServerSideProps(context: any) {
+    const { req, res } = context;
+
+    const auth = await isAuthenticated(req);
+
+    if (!auth) {
+        res.setHeader('location', '/login');
+        res.statusCode = 302;
+        res.end();
+        return { props: {} };
+    }
+
+    return {
+        props: {},
+    };
+}
+
+async function isAuthenticated(req: any) {
+    const token = req.cookies.token;
+    const JWT_SECRET = process.env.JWT_SECRET!;
+
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
