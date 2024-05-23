@@ -90,17 +90,17 @@ export default function UserDetails() {
                         alt="User profile picture"
                         className="w-24 h-24 mb-5 rounded-full"
                     />
-                    <IconButton
-                        className="text-white"
-                        onClick={handleUploadClick}
-                        sx={{
-                            position: 'absolute',
-                            right: 0,
-                            bottom: 0,
-                            backgroundColor: 'primary.main',
-                            '&:hover': { backgroundColor: 'primary.light' },
-                        }}
-                    >
+                    {/*<IconButton*/}
+                    {/*    className="text-white"*/}
+                    {/*    onClick={handleUploadClick}*/}
+                    {/*    sx={{*/}
+                    {/*        position: 'absolute',*/}
+                    {/*        right: 0,*/}
+                    {/*        bottom: 0,*/}
+                    {/*        backgroundColor: 'primary.main',*/}
+                    {/*        '&:hover': { backgroundColor: 'primary.light' },*/}
+                    {/*    }}*/}
+                    {/*>*/}
                         <EditOutlinedIcon />
                     </IconButton>
                 </Box>

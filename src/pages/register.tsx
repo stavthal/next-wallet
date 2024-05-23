@@ -49,9 +49,9 @@ export default function Register() {
         formData.append('email', email);
         formData.append('password', password);
         formData.append('name', firstName + ' ' + lastName);
-        if (profilePicture) {
-            formData.append('profilePicture', profilePicture);
-        }
+        // if (profilePicture) {
+        //     formData.append('profilePicture', profilePicture);
+        // }
 
         try {
             await axios.post('/api/auth/register', formData, {
