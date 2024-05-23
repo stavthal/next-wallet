@@ -7,21 +7,49 @@ import {
 } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import jwt_decode from 'jwt-decode'; // Corrected import statement
-import { User as UserType } from '@prisma/client'; // Assuming you export User type from here
+import { jwtDecode } from 'jwt-decode';
+import {
+    BankAccount,
+    Card,
+    Transaction,
+    User as UserType,
+} from '@prisma/client'; // Assuming you export User type from here
 
 interface AuthContextType {
-    user: UserType | null;
+    user: User | null;
     loading: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (token: string) => void;
     logout: () => void;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
     isAuthenticated: () => boolean;
+}
+
+interface User {
+    id: number;
+    email: string;
+    name: string;
+    profilePicture?: string;
+    totalMoney: number;
+    bankAccounts: BankAccount[];
+    cards: Card[];
+    transactions: Transaction[];
+}
+
+interface DecodedUser {
+    userId: number;
+    email: string;
+    name: string;
+    profilePicture?: string | undefined;
+    totalMoney: number;
+    bankAccounts: BankAccount[];
+    cards: Card[];
+    transactions: Transaction[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<UserType | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
 
@@ -42,22 +70,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loadUserFromCookies();
     }, []);
 
-    const login = async (email: string, password: string) => {
-        try {
-            setLoading(true);
-            const { data } = await axios.post('/api/auth/login', {
-                email,
-                password,
-            });
-            // Assuming the server sets HttpOnly cookie automatically and just sends back user data
-            setUser(data.user);
-            router.push('/dashboard'); // Redirect to dashboard upon successful login
-        } catch (error) {
-            console.error('Login failed:', error);
-            throw error; // Rethrow or handle appropriately (e.g., show an error message)
-        } finally {
-            setLoading(false);
-        }
+    const login = (token: string) => {
+        localStorage.setItem('token', token);
+        const decoded = jwtDecode<DecodedUser>(token);
+        setUser({
+            id: decoded.userId,
+            email: decoded.email,
+            name: decoded.name,
+            profilePicture: decoded?.profilePicture,
+            totalMoney: decoded?.totalMoney,
+            bankAccounts: decoded.bankAccounts,
+            cards: decoded.cards,
+            transactions: decoded.transactions,
+        });
     };
 
     const logout = () => {
@@ -78,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <AuthContext.Provider
-            value={{ user, loading, login, logout, isAuthenticated }}
+            value={{ user, setUser, loading, login, logout, isAuthenticated }}
         >
             {children}
         </AuthContext.Provider>

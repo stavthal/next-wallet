@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
 
-export function isAuthenticated(req) {
+export function isAuthenticated(req: any) {
     const token = req.cookies.token;
-    const JWT_SECRET = process.env.JWT_SECRET;
+    const JWT_SECRET = process.env.JWT_SECRET!;
 
     if (!token) {
         return false;
     }
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded: any = jwt.verify(token, JWT_SECRET);
         return Boolean(decoded);
     } catch (err) {
         return false;

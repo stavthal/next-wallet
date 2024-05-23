@@ -17,7 +17,9 @@ export default async function handler(
                 .json({ error: 'No authentication token found' });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const JWT_SECRET = process.env.JWT_SECRET!;
+
+        const decoded: any = jwt.verify(token, JWT_SECRET);
         if (!decoded) {
             return res.status(401).json({ error: 'Invalid token' });
         }
