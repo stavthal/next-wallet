@@ -3,25 +3,25 @@ import Navbar from "@/components/Navbar";
 import RequireAuth from "@/components/RequireAuth";
 import { Container, Typography, Avatar, Button } from "@mui/material";
 
-import React, {useEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {useRouter} from "next/router";
 import axios from "axios";
-import {User} from "@prisma/client";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import RecentTransactions from "@/components/dashboard/recentTransactions/RecentTransactions";
-function Dashboard() {
-    const { user } = useAuth();
-    const router  = useRouter();
-    const [userData, setUserData] = React.useState<User | null>(null);
-    const [loading, setLoading] = React.useState(true);
 
-    useEffect(() => {
+function Dashboard() {
+    const { user, setUser } = useAuth();
+    const [userState, setUserState] = useState();
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
+
+    useLayoutEffect(() => {
         const fetchUserDetails = async () => {
             try {
                 setLoading(true);
                 const response = await axios.post(`/api/auth/get_user`, { userId: user?.id });
-                setUserData(response.data);
+                setUserState(response.data);
             } catch (error) {
                 console.error('Failed to fetch user details:', error);
             } finally {
@@ -32,7 +32,7 @@ function Dashboard() {
         };
 
         fetchUserDetails();
-    }, [user?.id]);
+    }, [user]); // Listen for changes to user?.id
 
     return (
         <>
@@ -53,7 +53,7 @@ function Dashboard() {
                             {loading ?
                                 <Skeleton width={100}/>
                                 :
-                                userData ? `${userData.totalMoney.toFixed(2)} €` : null
+                                user ? `${user.totalMoney.toFixed(2)} €` : null
                             }
                         </Typography>
                     }
@@ -67,7 +67,7 @@ function Dashboard() {
                     </Button>
                 </Container>
 
-                <RecentTransactions />
+                <RecentTransactions transactions={user?.transactions || []} loading={loading} />
             </Container>
         </>
     );

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +13,12 @@ export default function Login() {
     const router = useRouter();
     const {user} = useAuth();
     const { login } = useAuth();
+
+    useEffect(() => {
+        if (user) {
+            router.push('/dashboard');
+        }
+    }, [user]);
 
 
 

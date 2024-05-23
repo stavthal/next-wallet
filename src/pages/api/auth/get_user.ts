@@ -12,6 +12,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         // Fetch the user from the database
         const user = await prisma.user.findUnique({
             where: { id: userId },
+            include: { transactions: true },
         });
 
         if (!user) {

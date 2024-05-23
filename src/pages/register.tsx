@@ -172,7 +172,7 @@ export default function Register() {
                 </FormLabel>
                 <div className="flex row">
                     <Button variant="contained" color="primary" onClick={handleFileUpload}>
-
+                        Choose file
                     </Button>
                     {selectedFileName && (
                         <Typography variant="body1" color="text.secondary" align="left" className="mt-2 ml-6">

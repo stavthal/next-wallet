@@ -8,9 +8,9 @@ interface TransactionItemProps {
     transaction?: {
         id: number;
         amount: number;
-        type: 'DEPOSIT' | 'WITHDRAW';
-        date: DateTime;
-        description: String;
+        type: string;
+        date: Date | string;
+        description: null | string;
     };
     loading: boolean;
 }

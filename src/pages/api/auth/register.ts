@@ -15,6 +15,9 @@ export const config = {
 };
 
 interface MulterRequest extends NextApiRequest {
+    email: any;
+    password: any;
+    name: any;
     file: any;
 }
 
@@ -30,39 +33,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method !== 'POST') {
         return res.status(405).end();
     }
+    try {
+        upload.single('profilePicture')(req as any, res as any, async (err) => {
+            if (err) {
+                console.error('Error uploading file:', err);
+                return res.status(500).json({error: 'Failed to upload file'});
+            }
 
-    const { email, password, name } = (req as MulterRequest).body;
+            const {email, password, name} = (req as MulterRequest).body;
 
+            if (!email || !password) {
+                return res.status(400).json({error: 'Email and password are required'});
+            }
 
-    upload.single('profilePicture')(req as any, res as any, async (err) => {
-        if (err) {
-            console.error('Error uploading file:', err);
-            return res.status(500).json({ error: 'Failed to upload file' });
-        }
+            try {
+                const hashedPassword = await hashPassword(password as string);
 
+                const user = await prisma.user.create({
+                    data: {
+                        email: email as string,
+                        password: hashedPassword,
+                        name: name as string,
+                        profilePicture: (req as MulterRequest).file
+                            ? `/uploads/${path.basename((req as MulterRequest).file.path)}`
+                            : null,
+                    },
+                });
 
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
-        }
-
-        try {
-            const hashedPassword = await hashPassword(password as string);
-
-            const user = await prisma.user.create({
-                data: {
-                    email: email as string,
-                    password: hashedPassword,
-                    name: name as string,
-                    profilePicture: (req as MulterRequest).file
-                        ? `/uploads/${path.basename((req as MulterRequest).file.path)}`
-                        : null,
-                },
-            });
-
-            res.status(201).json({ message: 'User created', user });
-        } catch (error) {
-            console.error('Error registering user:', error);
-            res.status(500).json({ error: error , errorMessage: 'User creation failed' });
-        }
-    });
+                res.status(201).json({message: 'User created', user});
+            } catch (error) {
+                console.error('Error registering user:', error);
+                res.status(500).json({error: error, errorMessage: 'User creation failed'});
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }

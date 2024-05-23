@@ -13,7 +13,6 @@ import {User} from "@prisma/client";
 export default function Navbar() {
     const router = useRouter();
     const { user, logout } = useAuth();
-    const [userData, setUserData] = useState<User | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -41,11 +40,11 @@ export default function Navbar() {
                 <Typography variant="h6" component="div" className="max-md:invisible" sx={{ flexGrow: 1 }}>
                     Next Wallet
                 </Typography>
-                {userData ? (
+                {user ? (
                     <>
                         <Button color="inherit" onClick={handleClick}>
                             <Image
-                                src={userData?.profilePicture ? userData.profilePicture : profileImage}
+                                src={user?.profilePicture ? user.profilePicture : profileImage}
                                 alt="profile"
                                 width={50}
                                 height={50}

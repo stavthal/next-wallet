@@ -5,12 +5,12 @@ import { useAuth } from '../context/AuthContext';
 const RequireAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
     const AuthenticatedComponent: FunctionComponent<P> = (props) => {
         const router = useRouter();
-        const { user, loading, isAuthenticated } = useAuth();
+        const { user} = useAuth();
 
         useEffect(() => {
             // Redirect to login if there is no user
-            if (!loading && !user) {
-                router.push('/login');
+            if (!user) {
+                router.push('/');
             }
         }, [ router]);
 

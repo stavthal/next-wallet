@@ -18,6 +18,7 @@ export default function UserDetails() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { user, setUser } = useAuth();
+    const [userState, setUserState] = useState<User | null>(null);
     const router = useRouter();
 
 
@@ -25,7 +26,7 @@ export default function UserDetails() {
         const fetchUser = async () => {
             try {
                 const response = await axios.post(`/api/auth/get_user`, { userId: user?.id });
-                setUser(response.data);
+                setUserState(response.data);
             } catch (error) {
                 console.error('Failed to fetch user:', error);
             }
@@ -52,7 +53,7 @@ export default function UserDetails() {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                setUser((prevState) => prevState ? {...prevState, profilePicture: response.data.url} : null);
+                // setUser((prevState) => prevState ? {...prevState, profilePicture: response.data.url} : null);
             } catch (error) {
                 console.error('Failed to upload profile picture:', error);
             } finally {
@@ -71,7 +72,7 @@ export default function UserDetails() {
             <Container className="flex flex-col items-center mt-5 min-h-screen py-5">
                 <Box position="relative" className="mb-4" display="inline-flex">
                     <Avatar
-                        src={user?.profilePicture}
+                        src={userState?.profilePicture}
                         alt="User profile picture"
                         className="w-24 h-24 mb-5 rounded-full"
                     />
