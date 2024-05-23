@@ -29,7 +29,7 @@ body {
 }
 
 .background-image {
-  background: url('../../public/background-dark.webp') no-repeat center center fixed;
+  background: url('../media/background-dark.webp') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

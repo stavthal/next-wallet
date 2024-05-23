@@ -2,18 +2,46 @@
 import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem } from '@mui/material';
-import {useEffect, useState} from 'react';
+import {
+    AppBar,
+    Toolbar,
+    IconButton,
+    Typography,
+    Button,
+    Menu,
+    MenuItem,
+    Avatar,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
 
-import profileImage from '../../public/dummy-profile-pic.png';
-import { colors } from "@/util/theme";
-import {useRouter} from "next/router";
+import profileImage from '../media/dummy-profile-pic.png';
+import nextLogo from '@/media/next-wallet-logo-white.webp';
+import { colors } from '@/util/theme';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 export default function Navbar() {
     const router = useRouter();
     const { user, logout } = useAuth();
-    const [userPicture, setUserPicture] = useState<string | undefined>(user?.profilePicture);
+    const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    useEffect(() => {
+        const fetchProfilePic = async () => {
+            try {
+                const response = await axios.post('/api/auth/get_user', {
+                    userId: user?.id,
+                });
+                setProfilePicUrl(response.data.profilePicture);
+            } catch (error) {
+                console.error('Failed to fetch user:', error);
+            }
+        };
+
+        if (user) {
+            fetchProfilePic();
+        }
+    }, [user?.profilePicture]);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -23,17 +51,18 @@ export default function Navbar() {
         setAnchorEl(null);
     };
 
-    useEffect(() => {
-        setUserPicture(user?.profilePicture);
-    }, [user]);
-
     return (
         <AppBar position="static">
             <Toolbar>
-                <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2, color: '#fff' }}
+                >
                     <Link href="/">
                         <Image
-                            src="/next-wallet-logo-white.webp"
+                            src={nextLogo}
                             alt="logo"
                             className="rounded-full my-2"
                             width={60}
@@ -41,19 +70,25 @@ export default function Navbar() {
                         />
                     </Link>
                 </IconButton>
-                <Typography variant="h6" component="div" className="max-md:invisible" sx={{ flexGrow: 1 }}>
+                <Typography
+                    variant="h6"
+                    component="div"
+                    className="max-md:invisible"
+                    sx={{ flexGrow: 1 }}
+                >
                     Next Wallet
                 </Typography>
                 {user ? (
                     <>
                         <Button color="inherit" onClick={handleClick}>
-                            <Image
-                                src={userPicture ? userPicture : profileImage}
-                                alt="profile"
-                                width={50}
-                                height={50}
-                                style={{width: 50, height: 50}}
-                                className="rounded-full"
+                            <Avatar
+                                src={
+                                    profilePicUrl
+                                        ? `/api/images/${profilePicUrl}`
+                                        : undefined
+                                }
+                                alt="User profile picture"
+                                className="w-14 h-14 my-5 rounded-full"
                             />
                         </Button>
                         <Menu
@@ -63,7 +98,11 @@ export default function Navbar() {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={() => router.push('/account/details')}>My Account</MenuItem>
+                            <MenuItem
+                                onClick={() => router.push('/account/details')}
+                            >
+                                My Account
+                            </MenuItem>
                             <MenuItem onClick={logout}>Logout</MenuItem>
                         </Menu>
                     </>
@@ -74,16 +113,16 @@ export default function Navbar() {
                                 variant="contained"
                                 color="secondary"
                                 className="mr-3"
-                                sx={{backgroundColor: '#fff', color: colors.primary }}
+                                sx={{
+                                    backgroundColor: '#fff',
+                                    color: colors.primary,
+                                }}
                             >
                                 Login
                             </Button>
                         </Link>
                         <Link href="/register" passHref>
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                            >
+                            <Button variant="outlined" color="secondary">
                                 Register
                             </Button>
                         </Link>

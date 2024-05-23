@@ -1,14 +1,22 @@
-import {FormEvent, useState, useRef} from 'react';
-import {Container, TextField, Button, Typography, Link, FormLabel} from '@mui/material';
+import { FormEvent, useState, useRef, useEffect } from 'react';
+import {
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Link,
+    FormLabel,
+} from '@mui/material';
 import axios from 'axios';
-import {useRouter} from "next/router";
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-import walletLogo from '../../public/next-wallet-logo.webp';
-import {useAuth} from "@/context/AuthContext";
+import walletLogo from '../media/next-wallet-logo.webp';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Register() {
     const router = useRouter();
+    const { user } = useAuth();
     const { login } = useAuth();
 
     const [email, setEmail] = useState<string>('');
@@ -22,10 +30,14 @@ export default function Register() {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        if (user) {
+            router.push('/dashboard');
+        }
+    }, []);
+
     const handleRegister = async (e: FormEvent<HTMLElement>): Promise<void> => {
         e.preventDefault();
-
-
 
         if (password !== confirmPassword) {
             setMessage('Passwords do not match');
@@ -35,7 +47,7 @@ export default function Register() {
         const formData = new FormData();
         formData.append('email', email);
         formData.append('password', password);
-        formData.append('name', firstName + " " + lastName);
+        formData.append('name', firstName + ' ' + lastName);
         if (profilePicture) {
             formData.append('profilePicture', profilePicture);
         }
@@ -48,7 +60,10 @@ export default function Register() {
             });
 
             // Login request
-            const { data } = await axios.post('/api/auth/login', { email, password });
+            const { data } = await axios.post('/api/auth/login', {
+                email,
+                password,
+            });
             // Store the token in local storage and update the user state
             localStorage.setItem('token', data.token);
 
@@ -58,7 +73,7 @@ export default function Register() {
             await router.push('/dashboard');
         } catch (error: any) {
             if (error?.response?.data?.code === 'P2002') {
-                setMessage("Email already exists");
+                setMessage('Email already exists');
             } else {
                 setMessage(error?.response?.data?.error); // Display the error message
             }
@@ -80,7 +95,12 @@ export default function Register() {
     function Copyright(props: any) {
         return (
             <div className="mt-10">
-                <Typography variant="body2" color="text.secondary" align="center" {...props}>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    align="center"
+                    {...props}
+                >
                     {'Copyright © '}
                     <Link color="inherit" href="/">
                         Next Wallet
@@ -98,12 +118,18 @@ export default function Register() {
                 <div className="flex flex-col justify-items-center items-center">
                     <Image
                         src={walletLogo}
-                        alt={"wallet-logo"}
+                        alt={'wallet-logo'}
                         className="mb-4 rounded-full shadow-2xl"
                         width={100}
                         height={100}
                     />
-                    <Typography sx={{ fontFamily: 'Montserrat'}} variant="h4" component="h1" align="center" gutterBottom>
+                    <Typography
+                        sx={{ fontFamily: 'Montserrat' }}
+                        variant="h4"
+                        component="h1"
+                        align="center"
+                        gutterBottom
+                    >
                         Register
                     </Typography>
                 </div>
@@ -166,34 +192,61 @@ export default function Register() {
                     ref={fileInputRef}
                 />
                 <FormLabel>
-                    <Typography className="mb-1" variant="body1" color="text.secondary" align="left">
+                    <Typography
+                        className="mb-1"
+                        variant="body1"
+                        color="text.secondary"
+                        align="left"
+                    >
                         Profile Picture
                     </Typography>
                 </FormLabel>
                 <div className="flex row">
-                    <Button variant="contained" color="primary" onClick={handleFileUpload}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleFileUpload}
+                    >
                         Choose file
                     </Button>
                     {selectedFileName && (
-                        <Typography variant="body1" color="text.secondary" align="left" className="mt-2 ml-6">
+                        <Typography
+                            variant="body1"
+                            color="text.secondary"
+                            align="left"
+                            className="mt-2 ml-6"
+                        >
                             Selected file: {selectedFileName}
                         </Typography>
                     )}
                 </div>
 
-                <Button type="submit" variant="outlined" color="primary" fullWidth className="mt-4">
+                <Button
+                    type="submit"
+                    variant="outlined"
+                    color="primary"
+                    fullWidth
+                    className="mt-4"
+                >
                     Register
                 </Button>
                 {message && (
-                    <Typography variant="body1" color="error" align="center" className="mt-2">
+                    <Typography
+                        variant="body1"
+                        color="error"
+                        align="center"
+                        className="mt-2"
+                    >
                         {message}
                     </Typography>
                 )}
                 <Link href="/login" className="self-end mt-10 underline">
-                    <Typography component="p" >Already have an account? Login here.</Typography>
+                    <Typography component="p">
+                        Already have an account? Login here.
+                    </Typography>
                 </Link>
             </form>
-            <Copyright/>
+            <Copyright />
         </Container>
     );
 }
