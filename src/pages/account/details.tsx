@@ -3,7 +3,6 @@ import { Box, Container, Typography, Avatar, IconButton } from '@mui/material';
 import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/context/AuthContext';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { enqueueSnackbar } from 'notistack';
 import jwt from 'jsonwebtoken';
 
@@ -90,19 +89,6 @@ export default function UserDetails() {
                         alt="User profile picture"
                         className="w-24 h-24 mb-5 rounded-full"
                     />
-                    {/*<IconButton*/}
-                    {/*    className="text-white"*/}
-                    {/*    onClick={handleUploadClick}*/}
-                    {/*    sx={{*/}
-                    {/*        position: 'absolute',*/}
-                    {/*        right: 0,*/}
-                    {/*        bottom: 0,*/}
-                    {/*        backgroundColor: 'primary.main',*/}
-                    {/*        '&:hover': { backgroundColor: 'primary.light' },*/}
-                    {/*    }}*/}
-                    {/*>*/}
-                        <EditOutlinedIcon />
-                    </IconButton>
                 </Box>
 
                 <input
