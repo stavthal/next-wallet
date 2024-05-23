@@ -1,127 +1,85 @@
-// src/context/AuthContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    ReactNode,
+} from 'react';
 import axios from 'axios';
-import {useRouter} from 'next/router';
-import { jwtDecode } from 'jwt-decode';
-import {Transaction} from "@prisma/client";
+import { useRouter } from 'next/router';
+import jwt_decode from 'jwt-decode'; // Corrected import statement
+import { User as UserType } from '@prisma/client'; // Assuming you export User type from here
 
 interface AuthContextType {
-    user: User | null;
+    user: UserType | null;
     loading: boolean;
-    login: (token: string) => void;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => void;
-    setUser: React.Dispatch<React.SetStateAction<User | null>>;
     isAuthenticated: () => boolean;
-}
-
-interface BankAccount {
-    userId: string;
-    user: User;
-    accountNumber: string;
-    beneficiaryNumber: string;
-    bankName: string;
-}
-
-interface Card {
-    userId: string;
-    user: User;
-    brand: string;
-    cardType: string;
-    cardholderName: string;
-    cardNumber: string;
-    expiryDate: string;
-    cvv: number;
-}
-
-interface User {
-    id: number;
-    email: string;
-    name: string;
-    profilePicture?: string;
-    totalMoney: number;
-    bankAccounts: BankAccount[];
-    cards: Card[];
-    transactions: Transaction[];
-}
-
-interface DecodedUser {
-    userId: number;
-    email: string;
-    name: string;
-    profilePicture?: string;
-    totalMoney: number;
-    bankAccounts: BankAccount[];
-    cards: Card[];
-    transactions: Transaction[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<UserType | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
 
     useEffect(() => {
+        async function loadUserFromCookies() {
+            try {
+                setLoading(true);
+                const { data } = await axios.get('/api/auth/validate'); // Assuming this endpoint checks cookies and returns user data
+                setUser(data.user);
+            } catch (error) {
+                console.error('Failed to validate user:', error);
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadUserFromCookies();
+    }, []);
+
+    const login = async (email: string, password: string) => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token')
-
-            if (token) {
-                const decoded = jwtDecode<DecodedUser>(token);
-                setUser(
-                    {
-                        id: decoded.userId,
-                        email: decoded.email,
-                        name: decoded.name,
-                        profilePicture: decoded?.profilePicture,
-                        totalMoney: decoded?.totalMoney,
-                        bankAccounts: decoded.bankAccounts,
-                        cards: decoded.cards,
-                        transactions: decoded.transactions,
-                    });
-            }
-        } catch(err) {
-            console.error(err);
-            logout();
+            const { data } = await axios.post('/api/auth/login', {
+                email,
+                password,
+            });
+            // Assuming the server sets HttpOnly cookie automatically and just sends back user data
+            setUser(data.user);
+            router.push('/dashboard'); // Redirect to dashboard upon successful login
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error; // Rethrow or handle appropriately (e.g., show an error message)
         } finally {
             setLoading(false);
         }
-    }, []);
-
-    const login = (token: string) => {
-        localStorage.setItem('token', token);
-        const decoded = jwtDecode<DecodedUser>(token);
-        setUser(
-            {
-                id: decoded.userId,
-                email: decoded.email,
-                name: decoded.name,
-                profilePicture: decoded?.profilePicture,
-                totalMoney: decoded?.totalMoney,
-                bankAccounts: decoded.bankAccounts,
-                cards: decoded.cards,
-                transactions: decoded.transactions,
-            });
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-
-        router.push('/'); // Navigate to the home page
+        axios
+            .post('/api/auth/logout')
+            .then(() => {
+                setUser(null);
+                router.push('/login'); // Redirect to login page after logout
+            })
+            .catch((error) => {
+                console.error('Logout failed:', error);
+            });
     };
 
     const isAuthenticated = () => {
-        if (localStorage.getItem('token')) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        return !!user;
+    };
 
     return (
-        <AuthContext.Provider value={{ user, setUser, loading, isAuthenticated, login, logout }}>
+        <AuthContext.Provider
+            value={{ user, loading, login, logout, isAuthenticated }}
+        >
             {children}
         </AuthContext.Provider>
     );
@@ -129,7 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;

@@ -10,8 +10,9 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import RecentTransactions from '@/components/dashboard/recentTransactions/RecentTransactions';
 import { User } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
-function Dashboard() {
+export default function Dashboard() {
     const { user, setUser } = useAuth();
     const [userState, setUserState] = useState<User | any>();
     const router = useRouter();
@@ -37,7 +38,7 @@ function Dashboard() {
         fetchUserDetails();
     }, [user]); // Listen for changes to user?.id
 
-    return (
+    return user ? (
         <>
             <Navbar />
             <Container>
@@ -100,7 +101,40 @@ function Dashboard() {
                 />
             </Container>
         </>
-    );
+    ) : null;
 }
 
-export default RequireAuth(Dashboard);
+export async function getServerSideProps(context: any) {
+    const { req, res } = context;
+
+    // Replace this with your actual logic to check if the user is authenticated
+    const auth = await isAuthenticated(req);
+
+    if (!auth) {
+        res.setHeader('location', '/login');
+        res.statusCode = 302;
+        res.end();
+        return { props: {} };
+    }
+
+    return {
+        props: {},
+    };
+}
+
+async function isAuthenticated(req: any) {
+    const token = req.cookies.token;
+    const JWT_SECRET = process.env.JWT_SECRET!;
+
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
