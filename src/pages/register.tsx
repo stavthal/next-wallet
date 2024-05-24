@@ -1,4 +1,4 @@
-import { FormEvent, useState, useRef, useEffect } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import {
     Container,
     TextField,
@@ -23,13 +23,9 @@ export default function Register() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [profilePicture, setProfilePicture] = useState<File | null>(null);
-    const [selectedFileName, setSelectedFileName] = useState<string>('');
     const [message, setMessage] = useState<string>('');
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (user) {
@@ -45,20 +41,14 @@ export default function Register() {
             return;
         }
 
-        const formData = new FormData();
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('name', firstName + ' ' + lastName);
-        // if (profilePicture) {
-        //     formData.append('profilePicture', profilePicture);
-        // }
+        const formData = {
+            email,
+            password,
+            name: firstName + ' ' + lastName,
+        };
 
         try {
-            await axios.post('/api/auth/register', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            await axios.post('/api/auth/register', formData);
 
             // Login request
             const { data } = await axios.post('/api/auth/login', {
@@ -78,18 +68,6 @@ export default function Register() {
                 setMessage(error?.response?.data?.error); // Display the error message
             }
         }
-    };
-
-    const handleFileUpload = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files ? e.target.files[0] : null;
-        setProfilePicture(file);
-        setSelectedFileName(file ? file.name : '');
     };
 
     function Copyright(props: any) {
@@ -183,43 +161,6 @@ export default function Register() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required={true}
                 />
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="my-4"
-                    style={{ display: 'none' }}
-                    ref={fileInputRef}
-                />
-                <FormLabel>
-                    <Typography
-                        className="mb-1"
-                        variant="body1"
-                        color="text.secondary"
-                        align="left"
-                    >
-                        Profile Picture
-                    </Typography>
-                </FormLabel>
-                <div className="flex row">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleFileUpload}
-                    >
-                        Choose file
-                    </Button>
-                    {selectedFileName && (
-                        <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            align="left"
-                            className="mt-2 ml-6"
-                        >
-                            Selected file: {selectedFileName}
-                        </Typography>
-                    )}
-                </div>
 
                 <Button
                     type="submit"
